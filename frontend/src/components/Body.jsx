@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Body = () => {
   return (
     <main className="container mx-auto p-4">

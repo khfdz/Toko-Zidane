@@ -1,38 +1,57 @@
-const products = [
-    {
-        id: 1,
-        image: 'http://localhost:5151/uploads/super.png', // URL image atau path statis
-        name: 'Djarum Super',
-        price: '25,500'
-    },
-    // Tambahkan produk lainnya di sini
-];
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllProducts } from '../redux/slices/productSlice';
 
 const Product = () => {
-    return (
-        <div className="p-8 mx-auto max-w-4xl">
-            <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
-                <thead>
-                    <tr>
-                        <th className="py-2 px-4 border-b border-gray-200">Image</th>
-                        <th className="py-2 px-4 border-b border-gray-200">Name</th>
-                        <th className="py-2 px-4 border-b border-gray-200">Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {products.map((product) => (
-                        <tr key={product.id}>
-                            <td className="py-2 px-4 border-b border-gray-200">
-                                <img src={product.image} alt={product.name} className="w-20 h-20 object-cover" />
-                            </td>
-                            <td className="py-2 px-4 border-b border-gray-200">{product.name}</td>
-                            <td className="py-2 px-4 border-b border-gray-200">{product.price}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  const dispatch = useDispatch();
+  const { products = [], status, error } = useSelector((state) => state.product); // Update state to state.product
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchAllProducts());
+    }
+  }, [dispatch, status]);
+
+  return (
+    <div className="mx-auto max-w-4xl -mt-[80px] mb-[90px]">
+      <div className="mb-4 fixed top-0 left-0 w-full overflow-x-auto whitespace-nowrap">
+        <div className="flex space-x-2 mt-[130px] ml-4">
+          <button className="bg-warna2 shadow-md text-black p-2 rounded-md">Rokok</button>
+          <button className="bg-warna2 shadow-md text-black p-2 rounded-md">Kategori Lain</button>
         </div>
-    );
+      </div>
+
+      <div className="pt-[80px]">
+        {status === 'loading' && <p>Loading...</p>}
+        {status === 'failed' && <p>{error}</p>}
+        {status === 'succeeded' && (
+          <table className="min-w-full shadow-lg rounded-lg overflow-hidden text-md">
+            <tbody>
+              {products.map((product) => (
+                <tr key={product._id}>
+                  <td className="border-b pl-4 pt-4 pb-4 border-gray-200">
+                    <img src={`http://localhost:5151${product.image}`} alt={product.name} className="w-14 object-cover" />
+                  </td>
+                  <td className="py-2 px-4 border-b border-gray-200">
+                    <div>
+                      <div>{product.name}</div>
+                      <div className="text-gray-500">{product.wholesale_price}</div>
+                    </div>
+                  </td>
+                  <td className="border-b border-gray-200">
+                    <div className="flex space-x-2 justify-center">
+                      <button className="bg-warna2 shadow-md text-black p-2 rounded-md">+5</button>
+                      <button className="bg-warna2 shadow-md text-black p-2 rounded-md">+10</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Product;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const SlideUp = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,13 +20,16 @@ const SlideUp = () => {
   };
 
   return (
-    <div>
-      <button
-        className="bg-black text-white p-4 mt-2"
-        onClick={toggleVisibility}
-      >
-        Slide Up
-      </button>
+    <div className=''>
+     <div className="flex items-center justify-center">
+  <button
+    className="bg-black text-white p-2 h-2 items-center flex justify-center"
+    onClick={toggleVisibility}
+  >
+    Slide Up
+  </button>
+</div>
+
 
       {/* Slide-up drawer */}
       <div

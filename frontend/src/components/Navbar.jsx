@@ -10,7 +10,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-blue1 text-white p-4 text-black ">
+      <nav className="bg-blue1  p-4 text-black ">
         <div className="container mx-auto flex justify-between items-center text-black">
           <div className="md:hidden">
             <button onClick={toggleSidebar} className="focus:outline-none ">
@@ -22,6 +22,7 @@ const Navbar = () => {
           <div className="text-xl font-bold">BrandName</div>
           <ul className="hidden md:flex space-x-6">
             <li><a href="#home" className="hover:text-pink1">Home</a></li>
+            <li><a href="#login" className="hover:text-pink1">Login</a></li>
             <li><a href="#about" className="hover:text-pink1">About</a></li>
             <li><a href="#services" className="hover:text-pink1">Services</a></li>
             <li><a href="#contact" className="hover:text-pink1">Contact</a></li>

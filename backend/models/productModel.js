@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid'); // Import UUID library for unique ID generation
 
 const productSchema = new mongoose.Schema({
+  pd_id: {
+    type: String,
+    required: true,
+    unique: true,
+    default: function() {
+      return `PD-${uuidv4().split('-')[0].toUpperCase()}`; // Generate ID like PD-1234
+    }
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
