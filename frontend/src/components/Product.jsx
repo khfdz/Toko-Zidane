@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProducts } from '../redux/slices/productSlice';
+import Tag from './Tag';
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -13,15 +14,14 @@ const Product = () => {
   }, [dispatch, status]);
 
   return (
-    <div className="mx-auto max-w-4xl -mt-[80px] mb-[90px]">
-      <div className="mb-4 fixed top-0 left-0 w-full overflow-x-auto whitespace-nowrap">
-        <div className="flex space-x-2 mt-[130px] ml-4">
-          <button className="bg-warna2 shadow-md text-black p-2 rounded-md">Rokok</button>
-          <button className="bg-warna2 shadow-md text-black p-2 rounded-md">Kategori Lain</button>
+    <div className="">
+      <div className="">
+        <div className="" >
+        <Tag />
         </div>
       </div>
 
-      <div className="pt-[80px]">
+      <div className="-mt-[14px] ">
         {status === 'loading' && <p>Loading...</p>}
         {status === 'failed' && <p>{error}</p>}
         {status === 'succeeded' && (
@@ -29,7 +29,7 @@ const Product = () => {
             <tbody>
               {products.map((product) => (
                 <tr key={product._id}>
-                  <td className="border-b pl-4 pt-4 pb-4 border-gray-200">
+                  <td className="border-b pl-4 pt-4 pb-4 border-gray-200 ">
                     <img src={`http://localhost:5151${product.image}`} alt={product.name} className="w-14 object-cover" />
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200">

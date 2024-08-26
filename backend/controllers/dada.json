@@ -1,0 +1,38 @@
+[
+    {
+        "_id": "66cc3ef41c23d5e5491fabc3",
+        "user": "66c63ed7be04a6c7e5fd8ee6",
+        "items": [
+            {
+                "product": {
+                    "price": 4500,
+                    "name": "Shinzui",
+                    "quantity": 24,
+                    "totalPriceProduct": 108000
+                },
+                "_id": "66cc3ef41c23d5e5491fabc5"
+            },
+            {
+                "product": {
+                    "price": 4500,
+                    "name": "Citra",
+                    "quantity": 12,
+                    "totalPriceProduct": 54000
+                },
+                "_id": "66cc3ef41c23d5e5491fabc7"
+            }
+        ],
+        "totalProduct": 2,
+        "totalQuantity": 36,
+        "note": "Ini adalah catatan tambahan untuk semua item",
+        "discount": 5000,
+        "additionalText": "Biaya tambahan untuk pengiriman",
+        "additionalPrice": 2000,
+        "cr_id": "CT-58CAF344",
+        "subTotal": 13500,
+        "totalPrice": 10500,
+        "createdAt": "2024-08-26T08:38:12.757Z",
+        "updatedAt": "2024-08-26T09:19:36.675Z",
+        "__v": 0
+    }
+]

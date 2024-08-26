@@ -57,6 +57,7 @@ const login = async (req, res) => {
 };
 
 // controllers/authController.js
+
 // Get user profile
 const getProfile = async (req, res) => {
     const userId = req.user.id; // ID dari token JWT

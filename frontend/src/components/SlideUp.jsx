@@ -1,95 +1,113 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
 
 const SlideUp = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.carts.currentCart || { items: [] });
 
-  // Dummy product data
-  const products = [
-    { name: 'Product 1', price: 100, stock: 10 },
-    { name: 'Product 2', price: 150, stock: 20 },
-    { name: 'Product 3', price: 200, stock: 5 },
-  ];
+  useEffect(() => {
+    dispatch(fetchCartForCurrentUserThunk());
+  }, [dispatch]);
 
-  // Calculate total items and total price
-  const totalItems = products.reduce((acc, product) => acc + product.stock, 0);
-  const totalPrice = products.reduce((acc, product) => acc + (product.price * product.stock), 0);
+  useEffect(() => {
+    console.log('Cart:', cart); // Log akan dipanggil setiap kali state `cart` berubah
+  }, [cart]);
 
-  // Toggle the visibility of the slide-up component
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
 
+  const cartItems = cart.items || [];
+  const note = cart.note || '';
+  const discount = cart.discount || 0;
+  const additionalText = cart.additionalText || '';
+  const additionalPrice = cart.additionalPrice || 0;
+  const subTotal = cart.subTotal || 0;
+  const totalProduct = cart.totalProduct || 0;
+  const totalQuantity = cart.totalQuantity || 0;
+  const totalPrice = cart.totalPrice || 0;
+
   return (
-    <div className=''>
-     <div className="flex items-center justify-center">
-  <button
-    className="bg-black text-white p-2 h-2 items-center flex justify-center"
-    onClick={toggleVisibility}
-  >
-    Slide Up
-  </button>
-</div>
+    <div>
+      <div className="flex items-center justify-center">
+        <button
+          className="bg-black text-white p-2 items-center flex justify-center"
+          onClick={toggleVisibility}
+        >
+          Slide Up
+        </button>
+      </div>
 
-
-      {/* Slide-up drawer */}
       <div
-        className={`fixed bottom-0 left-0 w-full bg-gray-300 p-4 transition-transform duration-500 ease-in-out ${
+        className={`fixed bottom-0 left-0 w-full h-full bg-gray-300 p-4 transition-transform duration-500 ease-in-out ${
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
-        style={{ height: '400px' }} // Increased height to fit buttons and table
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold">Slide Up Table</h2>
-          <button 
-            className="text-red-500" 
+          <h2 className="text-lg font-bold">Pembeli: {cart.customerName || 'Unknown'}</h2>
+          <button
+            className="text-red-500"
             onClick={toggleVisibility}
           >
             Close
           </button>
         </div>
 
-        {/* Total Items and Price */}
-        <div className="mb-4 flex justify-between items-center bg-white p-2 rounded-md shadow">
-          <div className="text-lg">
-            Total Items: <strong>{totalItems}</strong>
-          </div>
-          <div className="text-lg">
-            Total Price: <strong>${totalPrice}</strong>
-          </div>
-        </div>
-
-        {/* Table of Products */}
-        <div className="overflow-y-auto" style={{ maxHeight: '180px' }}>
-          <table className="table-auto w-full text-left mb-4">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Price</th>
-                <th className="px-4 py-2">Stock</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td className="border px-4 py-2">{product.name}</td>
-                  <td className="border px-4 py-2">${product.price}</td>
-                  <td className="border px-4 py-2">{product.stock}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-between mt-4">
-          <button className="bg-green-500 text-white px-4 py-2 rounded-md">
-            Bayar
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
-            Simpan
-          </button>
-        </div>
+        <ul>
+  {cartItems.map((item) => (
+    <li key={item._id} className="mb-2 flex justify-between">
+      {/* Bagian nama produk */}
+      <div className="w-1/3">
+        <span>{item.product.name}</span>
+        <br />
+        <span>{item.product.quantity} x {item.product.price}</span>
       </div>
+      
+      {/* Bagian quantity dan price */}
+      <div className="w-1/3 text-center">
+        
+      </div>
+      
+      {/* Bagian totalPriceProduct */}
+      <div className="w-1/3 text-right">
+        <span>{item.product.totalPriceProduct}</span>
+      </div>
+    </li>
+  ))}
+</ul>
+
+
+        <div className="mt-4">
+          <div>Note: {note}</div>
+          <div>Discount: {discount}</div>
+          <div>Additional Text: {additionalText}</div>
+          <div>Additional Price: {additionalPrice}</div>
+          <div>Total Product: {totalProduct}</div>
+          <div>Total Quantity: {totalQuantity}</div>
+          <div>Subtotal: {subTotal}</div>
+          <div>Total Price: {totalPrice}</div>
+        </div>
+
+        <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center">
+  <div className="flex-grow text-center">
+    <button className="bg-black text-white p-2 w-full max-w-md">
+      Total Price: {totalPrice}
+    </button>
+  </div>
+  <button className="bg-blue-500 w-[100px] text-white p-2 ml-4">
+    Simpan
+  </button>
+
+</div>
+
+
+
+
+      </div>
+
+
     </div>
   );
 };

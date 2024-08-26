@@ -1,3 +1,72 @@
+// const mongoose = require('mongoose');
+// const { v4: uuidv4 } = require('uuid');
+
+// const cartSchema = new mongoose.Schema({
+//   cr_id: {
+//     type: String,
+//     required: true,
+//     default: () => `CT-${uuidv4().split('-')[0].toUpperCase()}`,
+//     unique: true
+//   },
+//   user: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'User',
+//     required: true,
+//     unique: true
+//   },
+//   items: [
+//     {
+//       product: {
+//         type: new mongoose.Schema({
+//           price: {
+//             type: Number,
+//             required: true
+//           },
+//           name: {
+//             type: String,
+//             required: true
+//           },
+//           quantity: {
+//             type: Number,
+//             required: true
+//           },
+//           totalPriceProduct: {
+//             type: Number,
+//             required: true
+//           }
+//         }, { _id: false }),
+//         required: true
+//       }
+//     }
+//   ],
+//   note: {
+//     type: String,
+//     default: ''
+//   },
+//   discount: {
+//     type: Number,
+//     default: 0
+//   },
+//   additionalText: {
+//     type: String,
+//     default: ''
+//   },
+//   additionalPrice: {
+//     type: Number,
+//     default: 0
+//   },
+//   subTotal: {
+//     type: Number,
+//     required: true
+//   },
+//   totalPrice: {
+//     type: Number,
+//     required: true
+//   }
+// }, { timestamps: true });
+
+// module.exports = mongoose.model('Cart', cartSchema);
+
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
@@ -5,50 +74,84 @@ const cartSchema = new mongoose.Schema({
   cr_id: {
     type: String,
     required: true,
-    unique: true,
-    default: function() {
-      return `CR-${uuidv4().split('-')[0].toUpperCase()}`; // Generate ID like CR-1234
-    }
+    default: () => `CR-${uuidv4().split('-')[0].toUpperCase()}`,
+    unique: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    unique: true
   },
-  items: [{
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1
-    },
-    price: {
-      type: Number,
-      required: true
+  items: [
+    {
+      product: {
+        type: new mongoose.Schema({
+          price: {
+            type: Number,
+            required: true
+          },
+          name: {
+            type: String,
+            required: true
+          },
+          quantity: {
+            type: Number,
+            required: true
+          },
+          totalPriceProduct: {
+            type: Number,
+            required: true
+          }
+        }, { _id: false }),
+        required: true
+      }
     }
-  }],
-  status: {
+  ],
+  totalProduct: {
+    type: Number,
+    required: true,
+    default: function() {
+      return this.items.length;
+    }
+  },
+  totalQuantity: {
+    type: Number,
+    required: true,
+    default: function() {
+      return this.items.reduce((acc, item) => acc + item.product.quantity, 0);
+    }
+  },
+  note: {
     type: String,
-    enum: ['active', 'processing', 'completed'],
-    default: 'active'
+    default: ''
+  },
+  discount: {
+    type: Number,
+    default: 0
+  },
+  additionalText: {
+    type: String,
+    default: ''
+  },
+  additionalPrice: {
+    type: Number,
+    default: 0
+  },
+  subTotal: {
+    type: Number,
+    required: true,
+    default: function() {
+      return this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
+    }
   },
   totalPrice: {
     type: Number,
-    default: 0
+    required: true,
+    default: function() {
+      return this.subTotal + this.additionalPrice - this.discount;
+    }
   }
 }, { timestamps: true });
 
-// Pre-save middleware to calculate total price
-cartSchema.pre('save', function(next) {
-  if (this.isModified('items')) {
-    this.totalPrice = this.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  }
-  next();
-});
-
-const Cart = mongoose.model('Cart', cartSchema);
-module.exports = Cart;
+module.exports = mongoose.model('Cart', cartSchema);

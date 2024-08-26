@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 const API_URL = 'http://localhost:5151';
 
 // Function to get the token from cookies
-const getToken = () => Cookies.get('token');
+const getToken = () => Cookies.get('authToken');
 
 // Axios instance with dynamic token addition
 const axiosInstance = axios.create({
@@ -25,15 +25,33 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// Get all products
-export const getAllProducts = async () => {
+// Get all products with search params
+export const getAllProducts = async ({ searchQuery = '', tagQuery = [] }) => {
     try {
-        const response = await axiosInstance.get('/products');
+        // Menyiapkan query params
+        const params = {
+            search: searchQuery,   // Query untuk pencarian nama produk
+            ...(tagQuery.length ? { ct_id: tagQuery } : {}), // Menambahkan ct_id hanya jika tagQuery tidak kosong
+        };
+
+        // Log params untuk memeriksa query string yang akan dikirimkan
+        console.log('Fetching products with params:', params);
+
+        const response = await axiosInstance.get('/products/', {
+            params, // Kirimkan objek params ke backend
+        });
+
+        // Log response untuk memeriksa data yang diterima
+        console.log('Products fetched:', response.data);
+
         return response.data;
-    } catch {
+    } catch (error) {
+        console.error('Failed to fetch products:', error.message);
         throw new Error('Failed to fetch products');
     }
 };
+
+
 
 // Get product by ID
 export const getProductById = async (id) => {

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAllProducts, getProductById, updateProductById, deleteProductById } from '../api/productApiService';
 
-// Async thunk untuk mengambil semua produk
-export const fetchAllProducts = createAsyncThunk('products/fetchAll', async () => {
-  const response = await getAllProducts();
+// Async thunk untuk mengambil semua produk dengan search query (ct_id, search)
+export const fetchAllProducts = createAsyncThunk('products/fetchAll', async (searchQuery = {}) => {
+  const response = await getAllProducts(searchQuery); // Kirimkan query params (search, ct_id) ke API service
   return response;
 });
 
@@ -68,7 +68,7 @@ const productSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        const index = state.products.findIndex((product) => product.id === action.payload.id);
+        const index = state.products.findIndex((product) => product._id === action.payload._id); // Gunakan _id dari MongoDB
         if (index !== -1) {
           state.products[index] = action.payload;
         }
@@ -84,7 +84,7 @@ const productSlice = createSlice({
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.products = state.products.filter((product) => product.id !== action.payload);
+        state.products = state.products.filter((product) => product._id !== action.payload); // Gunakan _id dari MongoDB
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.status = 'failed';
