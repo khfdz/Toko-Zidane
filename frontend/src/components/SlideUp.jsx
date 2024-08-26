@@ -19,6 +19,10 @@ const SlideUp = () => {
     setIsVisible(!isVisible);
   };
 
+  const formatPrice = (price) => {
+    return `Rp. ${price.toLocaleString('id-ID')}`;
+  };
+
   const cartItems = cart.items || [];
   const note = cart.note || '';
   const discount = cart.discount || 0;
@@ -56,58 +60,50 @@ const SlideUp = () => {
         </div>
 
         <ul>
-  {cartItems.map((item) => (
-    <li key={item._id} className="mb-2 flex justify-between">
-      {/* Bagian nama produk */}
-      <div className="w-1/3">
-        <span>{item.product.name}</span>
-        <br />
-        <span>{item.product.quantity} x {item.product.price}</span>
-      </div>
-      
-      {/* Bagian quantity dan price */}
-      <div className="w-1/3 text-center">
-        
-      </div>
-      
-      {/* Bagian totalPriceProduct */}
-      <div className="w-1/3 text-right">
-        <span>{item.product.totalPriceProduct}</span>
-      </div>
-    </li>
-  ))}
-</ul>
-
+          {cartItems.map((item) => (
+            <li key={item._id} className="mb-2 flex justify-between">
+              {/* Bagian nama produk */}
+              <div className="w-1/3">
+                <span>{item.product.name}</span>
+                <br />
+                <span>{item.product.quantity} x {formatPrice(item.product.price)}</span>
+              </div>
+              
+              {/* Bagian quantity dan price */}
+              <div className="w-1/3 text-center">
+                
+              </div>
+              
+              {/* Bagian totalPriceProduct */}
+              <div className="w-1/3 text-right">
+                <span>{formatPrice(item.product.totalPriceProduct)}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
 
         <div className="mt-4">
           <div>Note: {note}</div>
-          <div>Discount: {discount}</div>
+          <div>Discount: {formatPrice(discount)}</div>
           <div>Additional Text: {additionalText}</div>
-          <div>Additional Price: {additionalPrice}</div>
+          <div>Additional Price: {formatPrice(additionalPrice)}</div>
           <div>Total Product: {totalProduct}</div>
           <div>Total Quantity: {totalQuantity}</div>
-          <div>Subtotal: {subTotal}</div>
-          <div>Total Price: {totalPrice}</div>
+          <div>Subtotal: {formatPrice(subTotal)}</div>
+          <div>Total Price: {formatPrice(totalPrice)}</div>
         </div>
 
         <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center">
-  <div className="flex-grow text-center">
-    <button className="bg-black text-white p-2 w-full max-w-md">
-      Total Price: {totalPrice}
-    </button>
-  </div>
-  <button className="bg-blue-500 w-[100px] text-white p-2 ml-4">
-    Simpan
-  </button>
-
-</div>
-
-
-
-
+          <div className="flex-grow text-center">
+            <button className="bg-black text-white p-2 w-full max-w-md">
+              Total Price: {formatPrice(totalPrice)}
+            </button>
+          </div>
+          <button className="bg-blue-500 w-[100px] text-white p-2 ml-4">
+            Simpan
+          </button>
+        </div>
       </div>
-
-
     </div>
   );
 };
