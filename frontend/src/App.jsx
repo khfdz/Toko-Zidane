@@ -1,8 +1,9 @@
 // src/App.jsx
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import Transaksi from './pages/Transaksi';
+import Transaction from './pages/Transaction';
 import Login from './pages/Login';
+import Payment from './pages/Payment';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/transaksi" element={<Transaksi />} />
+            <Route path="/transaksi" element={<Transaction />} />
+            <Route path="/payment" element={<Payment />} />
           </Routes>
         </div>
       </div>

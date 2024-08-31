@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const cartSchema = new mongoose.Schema({
-  cr_id: {
+const cartSaveSchema = new mongoose.Schema({
+  save_id: {
     type: String,
     required: true,
-    default: () => `CR-${uuidv4().split('-')[0].toUpperCase()}`,
+    default: () => `SAVE-${uuidv4().split('-')[0].toUpperCase()}`,
     unique: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    unique: true
+    required: true
   },
   customerName: {
     type: String,
@@ -86,7 +85,11 @@ const cartSchema = new mongoose.Schema({
     default: function() {
       return this.subTotal + this.additionalPrice - this.discount;
     }
+  },
+  savedAt: {
+    type: Date,
+    default: Date.now
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Cart', cartSchema);
+module.exports = mongoose.model('CartSave', cartSaveSchema);

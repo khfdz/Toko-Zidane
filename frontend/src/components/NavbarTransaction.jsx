@@ -1,13 +1,25 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+// Navbar component
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from './Sidebar';
 import IconPesanan from '../../public/icons/pesanan.png';
 import { fetchAllProducts } from '../redux/slices/productSlice'; // Import fetchAllProducts
+import { getAllSaveCartsThunk } from '../redux/slices/cartSaveSlice';
+import { setView } from '../redux/slices/viewSlice'; // Import setView
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(''); // State untuk input pencarian
+
   const dispatch = useDispatch(); // Inisialisasi dispatch
+  const saveCarts = useSelector((state) => state.cartSave.saveCarts || []);
+
+  useEffect(() => {
+    dispatch(getAllSaveCartsThunk())
+      .then((response) => {
+        console.log('Hasil dari getAllSaveCartsThunk:', response);
+      });
+  }, [dispatch]);
 
   // Fungsi untuk membuka dan menutup sidebar
   const toggleSidebar = () => {
@@ -21,6 +33,9 @@ const Navbar = () => {
 
     // Dispatch fetchAllProducts dengan query pencarian
     dispatch(fetchAllProducts({ searchQuery: query, tagQuery: [] })); // Jika Anda ingin menggunakan tagQuery, tambahkan tagQuery di sini
+
+    // Trigger perubahan view
+    dispatch(setView('product')); // Ubah view menjadi 'product'
   };
 
   return (
@@ -44,7 +59,12 @@ const Navbar = () => {
           />
 
           {/* Ikon pesanan */}
-          <img src={IconPesanan} alt="Pesanan" className="w-8 h-8 object-cover" />
+          <div className="relative inline-block">
+            <img src={IconPesanan} alt="Pesanan" className="w-8 h-8 object-cover" />
+            <span className="absolute top-0 right-0 left-6 transform -translate-x-1/2 -translate-y-1/2 bg-warna3 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+              {saveCarts.saveCartCount || 0} {/* Menggunakan saveCarts.length untuk menghitung jumlah cart yang tersimpan */}
+            </span>
+          </div>
 
           {/* Navigation links */}
           <ul className="hidden md:flex space-x-6">

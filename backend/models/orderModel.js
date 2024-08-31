@@ -1,18 +1,17 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const cartSchema = new mongoose.Schema({
-  cr_id: {
+const orderSchema = new mongoose.Schema({
+  order_id: {
     type: String,
     required: true,
-    default: () => `CR-${uuidv4().split('-')[0].toUpperCase()}`,
+    default: () => `ORD-${uuidv4().split('-')[0].toUpperCase()}`,
     unique: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    unique: true
+    required: true
   },
   customerName: {
     type: String,
@@ -45,19 +44,41 @@ const cartSchema = new mongoose.Schema({
   ],
   totalProduct: {
     type: Number,
-    required: true,
-    default: function() {
-      return this.items.length;
-    }
+    required: true
   },
   totalQuantity: {
     type: Number,
-    required: true,
-    default: function() {
-      return this.items.reduce((acc, item) => acc + item.product.quantity, 0);
-    }
+    required: true
+  },
+  subTotal: {
+    type: Number,
+    required: true
+  },
+  totalPrice: {
+    type: Number,
+    required: true
+  },
+  paymentAmount: {
+    type: Number,
+    required: false
+  },
+  change: {
+    type: Number,
+    required: false
+  },
+  debt: {
+    type: Number,
+    required: false
+  },
+  paymentDate: {
+    type: Date,
+    default: Date.now
   },
   note: {
+    type: String,
+    default: ''
+  },
+  additionalText: {
     type: String,
     default: ''
   },
@@ -65,28 +86,11 @@ const cartSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  additionalText: {
+  status: {
     type: String,
-    default: ''
-  },
-  additionalPrice: {
-    type: Number,
-    default: 0
-  },
-  subTotal: {
-    type: Number,
-    required: true,
-    default: function() {
-      return this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
-    }
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: function() {
-      return this.subTotal + this.additionalPrice - this.discount;
-    }
+    enum: ['Sent', 'Processing', 'Completed'],
+    default: 'Sent'
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Cart', cartSchema);
+module.exports = mongoose.model('Order', orderSchema);

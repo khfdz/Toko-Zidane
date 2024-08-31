@@ -5,7 +5,8 @@ import {
   fetchAllCarts,
   fetchCartById,
   deleteCartById,
-  editCartById
+  editCartById,
+  clearCart
 } from '../api/cartApiService';
 
 // Async thunks
@@ -39,10 +40,15 @@ export const editCartByIdThunk = createAsyncThunk('cart/editById', async ({ id, 
   return response;
 });
 
+export const clearCartThunk = createAsyncThunk('carts/clearCart', async () => {
+  const response = await clearCart();
+  return response;
+});
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
-    currentCart: null,
+    currentCart: { items: [], totalPrice: 0 }, // Nilai default untuk currentCart
     allCarts: [],
     status: 'idle',
     error: null,
@@ -56,7 +62,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartForCurrentUserThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload;
+        state.currentCart = action.payload || { items: [], totalPrice: 0 }; // Pastikan payload ada
       })
       .addCase(fetchCartForCurrentUserThunk.rejected, (state, action) => {
         state.status = 'failed';
@@ -69,9 +75,7 @@ const cartSlice = createSlice({
       })
       .addCase(addItemsToCartThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        if (state.currentCart) {
-          state.currentCart.items = action.payload.items;
-        }
+        state.currentCart = action.payload || { items: [], totalPrice: 0 }; // Pastikan payload ada
       })
       .addCase(addItemsToCartThunk.rejected, (state, action) => {
         state.status = 'failed';
@@ -84,7 +88,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchAllCartsThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.allCarts = action.payload;
+        state.allCarts = action.payload || []; // Pastikan payload ada
       })
       .addCase(fetchAllCartsThunk.rejected, (state, action) => {
         state.status = 'failed';
@@ -97,7 +101,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartByIdThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload;
+        state.currentCart = action.payload || { items: [], totalPrice: 0 }; // Pastikan payload ada
       })
       .addCase(fetchCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
@@ -111,8 +115,8 @@ const cartSlice = createSlice({
       .addCase(deleteCartByIdThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.allCarts = state.allCarts.filter(cart => cart._id !== action.payload);
-        if (state.currentCart && state.currentCart._id === action.payload) {
-          state.currentCart = null;
+        if (state.currentCart._id === action.payload) {
+          state.currentCart = { items: [], totalPrice: 0 }; // Nilai default
         }
       })
       .addCase(deleteCartByIdThunk.rejected, (state, action) => {
@@ -126,11 +130,24 @@ const cartSlice = createSlice({
       })
       .addCase(editCartByIdThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        if (state.currentCart && state.currentCart._id === action.payload._id) {
-          state.currentCart = action.payload;
+        if (state.currentCart._id === action.payload._id) {
+          state.currentCart = action.payload || { items: [], totalPrice: 0 }; // Pastikan payload ada
         }
       })
       .addCase(editCartByIdThunk.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+
+      // Handle clearCartThunk
+      .addCase(clearCartThunk.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(clearCartThunk.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.currentCart = { items: [], totalPrice: 0 }; // Nilai default
+      })
+      .addCase(clearCartThunk.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

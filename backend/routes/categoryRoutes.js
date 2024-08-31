@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const authenticate = require('../middlewares/authenticate');
 const {
     getAllCategories,
     getCategoryById,
@@ -8,6 +7,7 @@ const {
     updateCategoryById,
     deleteCategoryById
 } = require('../controllers/categoryController');
+const authenticate = require('../middlewares/authenticate');
 
 // Get all categories
 router.get('/', authenticate, getAllCategories);

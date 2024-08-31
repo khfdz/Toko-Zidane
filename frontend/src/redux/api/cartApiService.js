@@ -62,3 +62,9 @@ export const editCartById = async (id, items) => {
     const response = await axiosInstance.put(`/carts/${id}`, { items });
     return response.data;
 };
+
+// Clear Cart 
+export const clearCart = async () => {
+    const response = await axiosInstance.post('/carts/clear');
+    return response.data;
+};

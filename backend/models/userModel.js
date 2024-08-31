@@ -22,6 +22,39 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
+  address: {
+    type: String,
+    default: ''
+  },
+  profilePhoto: {
+    type: String,
+    default: ''
+  },
+  name: {
+    type: String,
+    default: '',
+    unique: true
+  },
+  storePhotos: {
+    type: [String], // Array of strings to store multiple photo URLs or paths
+    validate: {
+      validator: function(value) {
+        return value.length <= 4; // Maximum 4 photos allowed
+      },
+      message: 'You can upload a maximum of 4 photos'
+    },
+    default: []
+  },
+  debt: {
+    type: Number,
+    default: 0
+  },
+  orderHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order'
+    }
+  ]
 }, { timestamps: true });
 
 // Hash the password before saving
