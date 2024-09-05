@@ -1,23 +1,34 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchUserById } from '../redux/slices/authSlice'; // Pastikan fungsi ini ada
 
 const PaymentPage = () => {
-  const totalPrice = useSelector((state) => state.payment.totalPrice);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Ambil data dari Redux store
+  const totalPrice = useSelector((state) => state.carts.currentCart.totalPrice);
+  const customerId = useSelector((state) => state.carts.currentCart.customerId); // Ambil ID customer dari cart
   const [payment, setPayment] = useState('');
-  const [setBuyerName] = useState('Pelanggan Setia');
   const [change, setChange] = useState(0);
   const [debt, setDebt] = useState(0);
   const [suggestedPayments, setSuggestedPayments] = useState([]);
-  const [buyerList] = useState(['Pelanggan Setia', 'Warung Fauzan', 'Warung Mang Eblek']);
-  const [filteredBuyers, setFilteredBuyers] = useState([]);
-  const [buyerDebt, setBuyerDebt] = useState(0);
+  const [customerName, setCustomerName] = useState('');
 
   useEffect(() => {
-    setFilteredBuyers(buyerList);
-  }, [buyerList]);
+    // Ambil data user berdasarkan ID customer dari cart
+    dispatch(fetchUserById(customerId))
+      .then((response) => {
+        const user = response.payload;
+        setCustomerName(user.name);
+        setDebt(user.debt);
+      })
+      .catch((error) => {
+        console.error('Error fetching user:', error);
+      });
+  }, [dispatch, customerId]);
 
-  const navigate = useNavigate();
   const handleToTransactionPage = () => {
     navigate('/transaksi');
   };
@@ -25,7 +36,7 @@ const PaymentPage = () => {
   const calculateChangeAndDebt = (paymentValue) => {
     const changeAmount = paymentValue - totalPrice;
     setChange(changeAmount >= 0 ? changeAmount : 0);
-    setDebt(changeAmount < 0 ? Math.abs(changeAmount) : 0);
+    setDebt(changeAmount < 0 ? Math.abs(changeAmount) : debt);
   };
 
   const handlePaymentChange = (e) => {
@@ -37,20 +48,6 @@ const PaymentPage = () => {
   const handleQuickPayment = (amount) => {
     setPayment(amount);
     calculateChangeAndDebt(amount);
-  };
-
-  const handleSearchBuyer = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    const filtered = buyerList.filter((buyer) =>
-      buyer.toLowerCase().includes(searchValue)
-    );
-    setFilteredBuyers(filtered);
-  };
-
-  const handleSelectBuyer = (buyer) => {
-    setBuyerName(buyer);
-    const dummyDebt = buyer === 'Warung Fauzan' ? 50000 : 0;
-    setBuyerDebt(dummyDebt);
   };
 
   useEffect(() => {
@@ -88,30 +85,14 @@ const PaymentPage = () => {
 
       <div className="mb-4">
         <p className="text-lg font-semibold">Nama Pembeli:</p>
-        <input
-          type="text"
-          placeholder="Cari Nama Pembeli"
-          onChange={handleSearchBuyer}
-          className="w-full p-2 border rounded-md"
-        />
-        <ul className="mt-2 border rounded-md">
-          {filteredBuyers.map((buyer, index) => (
-            <li
-              key={index}
-              className="p-2 cursor-pointer hover:bg-gray-200"
-              onClick={() => handleSelectBuyer(buyer)}
-            >
-              {buyer}
-            </li>
-          ))}
-        </ul>
+        <p className="text-xl font-bold">{customerName}</p> {/* Menggunakan customerName langsung */}
       </div>
 
       <div className="mb-4">
-        {buyerDebt === 0 ? (
+        {debt === 0 ? (
           <p className="text-green-600">Pelanggan tidak mempunyai hutang, yeay!</p>
         ) : (
-          <p className="text-red-600">Pelanggan mempunyai hutang: {formatPrice(buyerDebt)}</p>
+          <p className="text-red-600">Pelanggan mempunyai hutang: {formatPrice(debt)}</p>
         )}
       </div>
 
@@ -158,13 +139,13 @@ const PaymentPage = () => {
         </button>
       )}
 
-      {change > 0 && buyerDebt === 0 && (
+      {change > 0 && debt === 0 && (
         <button className="bg-blue-500 text-white w-full p-2 rounded-md" onClick={handlePay}>
           Bayar
         </button>
       )}
 
-      {buyerDebt > 0 && change > 0 && (
+      {debt > 0 && change > 0 && (
         <div className="mb-4">
           <p className="text-lg font-semibold text-yellow-600">Apakah ingin menggunakan kembalian untuk mencicil hutang?</p>
           <button className="bg-blue-500 text-white w-full p-2 rounded-md mt-2" onClick={handleCicilHutang}>

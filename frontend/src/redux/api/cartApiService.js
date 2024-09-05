@@ -1,4 +1,3 @@
-// src/api/cartApiService.js
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -30,8 +29,7 @@ axiosInstance.interceptors.request.use(
 export const fetchCartForCurrentUser = async () => {
     const response = await axiosInstance.get('/carts/me');
     return response.data;
-  };
-  
+};
 
 // Add items to the cart
 export const addItemsToCart = async (items) => {
@@ -53,13 +51,13 @@ export const fetchCartById = async (id) => {
 
 // Delete a specific cart by ID
 export const deleteCartById = async (id) => {
-    const response = await axiosInstance.delete(`/carts/${id}`);
-    return response.data;
+    await axiosInstance.delete(`/carts/${id}`);
+    return id;
 };
 
 // Edit a specific cart by ID
-export const editCartById = async (id, items) => {
-    const response = await axiosInstance.put(`/carts/${id}`, { items });
+export const editCartById = async (id, updates) => {
+    const response = await axiosInstance.put(`/carts/${id}`, updates); // Kirim updates langsung
     return response.data;
 };
 

@@ -70,12 +70,14 @@ const Transaksi = () => {
             <span className="bg-warna3 rounded-md p-1 w-[120px] text-sm">Banyaknya: {totalQuantity}</span>
           </div>
           <div className="absolute bottom-0 left-0 w-full">
+            
             <button
               className="bg-black text-white p-4 w-full rounded-md flex items-center justify-center"
               onClick={toggleSlideUp}
             >
               <p className="text-center">Perkiraan: {formatPrice(cart.totalPrice)}</p>
             </button>
+            
           </div>
         </div>
       </footer>

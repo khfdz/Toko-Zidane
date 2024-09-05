@@ -13,9 +13,15 @@ const cartSaveSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  customerName: {
-    type: String,
-    default: 'Pelanggan Setia'
+  customer: {
+    name: {
+      type: String,
+      default: 'Pelanggan Setia'
+    },
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   },
   items: [
     {

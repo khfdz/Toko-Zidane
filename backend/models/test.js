@@ -2,11 +2,16 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const cartSchema = new mongoose.Schema({
-  cr_id: {
+  save_id: {
     type: String,
     required: true,
-    default: () => `CR-${uuidv4().split('-')[0].toUpperCase()}`,
+    default: () => `SAVE-${uuidv4().split('-')[0].toUpperCase()}`,
     unique: true
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   customer: {
     name: {
@@ -17,12 +22,6 @@ const cartSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     }
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    unique: true
   },
   items: [
     {
@@ -52,12 +51,16 @@ const cartSchema = new mongoose.Schema({
   totalProduct: {
     type: Number,
     required: true,
-    default: 0
+    default: function() {
+      return this.items.length;
+    }
   },
   totalQuantity: {
     type: Number,
     required: true,
-    default: 0
+    default: function() {
+      return this.items.reduce((acc, item) => acc + item.product.quantity, 0);
+    }
   },
   note: {
     type: String,
@@ -78,20 +81,21 @@ const cartSchema = new mongoose.Schema({
   subTotal: {
     type: Number,
     required: true,
-    default: 0
+    default: function() {
+      return this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
+    }
   },
   totalPrice: {
     type: Number,
     required: true,
-    default: 0
+    default: function() {
+      return this.subTotal + this.additionalPrice - this.discount;
+    }
+  },
+  savedAt: {
+    type: Date,
+    default: Date.now
   }
 }, { timestamps: true });
-
-// Middleware untuk menghitung subTotal dan totalPrice sebelum menyimpan cart
-cartSchema.pre('save', function(next) {
-  this.subTotal = this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
-  this.totalPrice = this.subTotal + this.additionalPrice - this.discount;
-  next();
-});
 
 module.exports = mongoose.model('Cart', cartSchema);

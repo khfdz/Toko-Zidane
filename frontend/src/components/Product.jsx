@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProducts } from '../redux/slices/productSlice';
 import { addItemsToCartThunk, fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
+import { useNavigate } from 'react-router-dom';
 import Tag from './Tag';
 
 const Product = () => {
@@ -21,6 +22,11 @@ const Product = () => {
         dispatch(fetchCartForCurrentUserThunk());
       });
   };
+
+  const navigate = useNavigate();
+  const handleToTestingPage = () => {
+    navigate('/testing');
+  };
   
   
 
@@ -31,6 +37,9 @@ const Product = () => {
           <Tag />
         </div>
       </div>
+      <button 
+      onClick={handleToTestingPage}
+      className="bg-black text-white p-2 w-full">Testing</button>
 
       <div className="-mt-[14px] ">
         {status === 'loading' && <p>Loading...</p>}

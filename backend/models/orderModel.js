@@ -5,91 +5,49 @@ const orderSchema = new mongoose.Schema({
   order_id: {
     type: String,
     required: true,
-    default: () => `ORD-${uuidv4().split('-')[0].toUpperCase()}`,
-    unique: true
+    unique: true,
+    default: () => `ORD-${uuidv4().split('-')[0].toUpperCase()}`
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  customerName: {
-    type: String,
-    default: 'Pelanggan Setia'
-  },
-  items: [
-    {
-      product: {
-        type: new mongoose.Schema({
-          price: {
-            type: Number,
-            required: true
-          },
-          name: {
-            type: String,
-            required: true
-          },
-          quantity: {
-            type: Number,
-            required: true
-          },
-          totalPriceProduct: {
-            type: Number,
-            required: true
-          }
-        }, { _id: false }),
-        required: true
-      }
+  customer: {
+    name: {
+      type: String,
+      default: 'Pelanggan Setia'
+    },
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }
-  ],
-  totalProduct: {
-    type: Number,
-    required: true
   },
-  totalQuantity: {
-    type: Number,
-    required: true
-  },
-  subTotal: {
-    type: Number,
-    required: true
-  },
-  totalPrice: {
-    type: Number,
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cart',
     required: true
   },
   paymentAmount: {
     type: Number,
-    required: false
+    default: 0
   },
   change: {
     type: Number,
-    required: false
+    default: 0
   },
   debt: {
     type: Number,
-    required: false
+    default: 0
   },
   paymentDate: {
     type: Date,
     default: Date.now
   },
-  note: {
-    type: String,
-    default: ''
-  },
-  additionalText: {
-    type: String,
-    default: ''
-  },
-  discount: {
-    type: Number,
-    default: 0
-  },
   status: {
     type: String,
-    enum: ['Sent', 'Processing', 'Completed'],
-    default: 'Sent'
+    enum: ['sent', 'processing', 'completed'],
+    default: 'processing'
   }
 }, { timestamps: true });
 

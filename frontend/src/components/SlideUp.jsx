@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchCartForCurrentUserThunk, clearCartThunk } from '../redux/slices/cartSlice';
+import { fetchCartForCurrentUserThunk, clearCartThunk, editCartByIdThunk } from '../redux/slices/cartSlice';
 import { saveCartThunk, getAllSaveCartsThunk } from '../redux/slices/cartSaveSlice';
 import { fetchAllUsers } from '../redux/slices/authSlice';
 import PropTypes from 'prop-types';
-import { setTotalPrice } from '../redux/slices/paymentSlice';
 
 const SlideUp = ({ isVisible, onToggle }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const cart = useSelector((state) => state.carts.currentCart || { items: [] });
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState('Pelanggan Setia');
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState(''); // Tetap gunakan customerId
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
@@ -23,7 +25,9 @@ const SlideUp = ({ isVisible, onToggle }) => {
     dispatch(fetchAllUsers())
       .then((response) => {
         console.log('Fetched users:', response);
-        setCustomers([{ _id: 'default', name: 'Pelanggan Setia', email: '', phone: '', debt: 0 }, ...response.payload]); // Tambahkan "Pelanggan Setia"
+        // Mengambil nama dan ID pelanggan
+        const customerNames = response.payload.map(user => ({ _id: user._id, name: user.name }));
+        setCustomers([{ _id: 'default', name: 'Pelanggan Setia' }, ...customerNames]);
       })
       .catch((error) => {
         console.error('Error fetching users:', error);
@@ -69,9 +73,9 @@ const SlideUp = ({ isVisible, onToggle }) => {
       });
   };
 
-  const navigate = useNavigate();
   const handlePayment = () => {
-    dispatch(setTotalPrice(cart.totalPrice || 0));
+    // Contoh: Gunakan selectedCustomerId untuk keperluan pembayaran jika dibutuhkan
+    console.log('Customer ID:', selectedCustomerId);
     navigate('/payment');
     onToggle();
   };
@@ -79,8 +83,27 @@ const SlideUp = ({ isVisible, onToggle }) => {
   const handleCustomerClick = () => setPopupVisible(true);
 
   const handleCustomerSelect = (customer) => {
-    setSelectedCustomer(customer.name);
+    setSelectedCustomer(customer.name); // Set nama pelanggan
+    setSelectedCustomerId(customer._id); // Set ID pelanggan
     setPopupVisible(false);
+
+    // Update keranjang dengan nama dan ID pelanggan
+    if (cart._id) {
+      const payload = { 
+        id: cart._id, 
+        updates: { 
+          customerName: customer.name, // Simpan nama pelanggan
+          customerId: customer._id     // Simpan ID pelanggan
+        } 
+      };
+      dispatch(editCartByIdThunk(payload))
+        .then((response) => {
+          console.log('Cart updated with new customer:', response);
+        })
+        .catch((error) => {
+          console.error('Error updating cart:', error);
+        });
+    }
   };
 
   const filteredCustomers = customers.filter((customer) =>
@@ -97,6 +120,7 @@ const SlideUp = ({ isVisible, onToggle }) => {
   const totalProduct = cart.totalProduct || 0;
   const totalQuantity = cart.totalQuantity || 0;
   const totalPrice = cart.totalPrice || 0;
+  const customerName = selectedCustomer || cart.customerName || 'Pelanggan Setia';
 
   return (
     <div>
@@ -107,8 +131,9 @@ const SlideUp = ({ isVisible, onToggle }) => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold cursor-pointer" onClick={handleCustomerClick}>
-            Pembeli: {selectedCustomer}
+            Nama Pembeli: {customerName}
           </h2>
+
           <button className="text-red-500" onClick={onToggle}>
             Close
           </button>
@@ -168,48 +193,43 @@ const SlideUp = ({ isVisible, onToggle }) => {
             <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center">
               <button onClick={handleClearCart} className="bg-red-500 w-[70px] text-white p-2">hapus</button>
               <button onClick={handleSaveCart} className="bg-blue-500 w-[120px] text-white p-2">Simpan</button>
-              <button onClick={handlePayment} className="bg-green-500 w-[180px] text-white p-2">Bayar</button>
+              <button onClick={handlePayment} className="bg-green-500 w-[120px] text-white p-2">Bayar</button>
             </div>
           </>
         )}
-      </div>
 
-      {/* Popup untuk memilih pelanggan */}
-      {isPopupVisible && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-4 rounded-lg w-[300px] max-h-[80%] overflow-y-auto">
-            <input
-              type="text"
-              placeholder="Cari pelanggan..."
-              className="w-full p-2 border border-gray-300 rounded mb-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <ul>
-              {filteredCustomers.map((customer) => (
-                <li
-                  key={customer._id}
-                  className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleCustomerSelect(customer)}
-                >
-                  {customer.name}
-                </li>
-              ))}
-            </ul>
-            <button
-              className="mt-2 bg-red-500 text-white p-2 rounded"
-              onClick={() => setPopupVisible(false)}
-            >
-              Close
-            </button>
+        {isPopupVisible && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg w-[90%] max-w-md">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search customer..."
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+              <ul>
+                {filteredCustomers.map((customer) => (
+                  <li
+                    key={customer._id}
+                    onClick={() => handleCustomerSelect(customer)}
+                    className="cursor-pointer p-2 hover:bg-gray-200"
+                  >
+                    {customer.name}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => setPopupVisible(false)} className="mt-2 bg-gray-500 text-white p-2 rounded">
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-// Validasi PropTypes
 SlideUp.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   onToggle: PropTypes.func.isRequired,
