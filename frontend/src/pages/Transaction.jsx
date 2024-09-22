@@ -42,45 +42,45 @@ const Transaksi = () => {
 
   return (
     <div className="relative">
-      <div className="bg-white h-[140px] fixed top-0 left-0 right-0 z-10">
-        <NavbarTransaction />
-        <div className="fixed top-16 mt-2 left-4 right-4 w-auto flex bg-warna3 rounded-md h-12 bg-opacity-50 items-center justify-center font-bold text-black">
-          <button className="w-[150px] p-2 mx-2" onClick={() => handleViewChange('manual')}>
-            Manual
-          </button>
-          <button className="w-[150px] p-2 mx-2 rounded-md bg-warna3" onClick={() => handleViewChange('product')}>
-            Produk
-          </button>
-          <button className="w-[150px] p-2 mx-2" onClick={() => handleViewChange('kalkulator')}>
-            Kalkulator
-          </button>
-        </div>
-      </div>
+<div className="bg-white h-[134px] fixed top-0 left-0 right-0 z-10">
+  <NavbarTransaction />
+  <div className="fixed top-16 mt-2 left-4 right-4 w-auto flex bg-warna2 rounded-md h-12 items-center justify-center font-semibold text-white">
+    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800" onClick={() => handleViewChange('manual')}>
+      Manual
+    </button>
+    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center rounded-md bg-warna3" onClick={() => handleViewChange('product')}>
+      Produk
+    </button>
+    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800" onClick={() => handleViewChange('kalkulator')}>
+      Kalkulator
+    </button>
+  </div>
+</div>
+
 
       <div className="pt-[200px]">
         {view === 'kalkulator' && <Kalkulator />}
-        {view === 'product' && <Product />}
+         {view === 'product' && <Product formatPrice={formatPrice} />}
       </div>
 
       <SlideUp isVisible={isSlideUpVisible} onToggle={toggleSlideUp} />
-      <footer className="bg-white text-black fixed -bottom-1 left-0 w-full h-[90px] md:static  flex items-center justify-center">
-        <div className="relative w-full h-full">
-          <div className="absolute top-0 left-0 w-full flex justify-center mt-2 space-x-4">
-            <span className="bg-warna3 rounded-md p-1 w-[120px] text-sm">Jenis Produk: {totalProduct}</span>
-            <span className="bg-warna3 rounded-md p-1 w-[120px] text-sm">Banyaknya: {totalQuantity}</span>
-          </div>
-          <div className="absolute bottom-0 left-0 w-full">
-            
-            <button
-              className="bg-black text-white p-4 w-full rounded-md flex items-center justify-center"
-              onClick={toggleSlideUp}
-            >
-              <p className="text-center">Perkiraan: {formatPrice(cart.totalPrice)}</p>
-            </button>
-            
-          </div>
-        </div>
-      </footer>
+      
+      <footer className="bg-warna2 text-black fixed bottom-0 left-0 w-full h-[90px] flex flex-col items-center justify-between border-t border-gray-300">
+  <div className="flex flex-row text-white font-semibold justify-center space-x-4 mt-[1px]">
+    <span className="bg-warna1 rounded-md p-1 w-[120px] text-center -mt-1">Jenis: {totalProduct} item</span>
+    <span className="bg-warna1 rounded-md p-1 w-[120px] text-center -mt-1">Total: {totalQuantity} item</span>
+  </div>
+  <button
+    className=" bg-warna3 font-bold text-white p-3 w-[350px] h-[50px] rounded-md flex items-center justify-center shadow-lg relative top-2" // Atur posisi dengan 'relative' dan 'top'
+    onClick={toggleSlideUp}
+  >
+    <p className="text-center text-md text-white ">Perkiraan: {formatPrice(cart.totalPrice)}</p>
+  </button>
+</footer>
+
+
+
+
     </div>
   );
 };

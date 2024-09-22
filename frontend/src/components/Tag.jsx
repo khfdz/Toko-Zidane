@@ -33,8 +33,8 @@ const Tag = () => {
   const handleCategoryClick = (ct_id) => {
     setSelectedCategories(prevSelected => {
       const newSelected = prevSelected.includes(ct_id) 
-        ? prevSelected.filter(id => id !== ct_id) 
-        : [...prevSelected, ct_id];
+        ? prevSelected.filter(id => id !== ct_id) // Jika sudah ada, hapus
+        : [...prevSelected, ct_id]; // Jika belum ada, tambahkan
 
       console.log('Selected categories:', newSelected);
       return newSelected;
@@ -43,15 +43,17 @@ const Tag = () => {
 
   return (
     <div className="fixed inset-0 mt-[130px] left-0 bg-white h-[50px]">
-      <div className="flex space-x-2 overflow-x-auto whitespace-nowrap px-4 py-2">
+      <div className="flex space-x-2 overflow-x-auto whitespace-nowrap px-4 py-2 font-normald text-gray-800">
         {status === 'loading' && <p>Loading categories...</p>}
         {status === 'failed' && <p>Error loading categories: {error}</p>}
         {status === 'succeeded' &&
           categories.map((category) => (
             <button
               key={category._id}
-              className={`bg-warna2 shadow-md text-black p-2 rounded-md hover:bg-warna3 transition-colors duration-300 ${
-                selectedCategories.includes(category.ct_id) ? 'bg-warna3' : ''
+              className={`p-2 rounded-md transition-colors duration-300 ${
+                selectedCategories.includes(category.ct_id)
+                  ? 'bg-warna3 text-white font-semibold' // Jika dipilih, background warna nyala
+                  : 'bg-warna2 text-black' // Jika tidak dipilih, background default
               }`}
               onClick={() => handleCategoryClick(category.ct_id)} // Log ct_id on click
             >

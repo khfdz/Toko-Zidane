@@ -6,7 +6,7 @@ import categoryReducer from './slices/categorySlice';
 import cartReducer from './slices/cartSlice';
 import cartSaveReducer from './slices/cartSaveSlice';
 import viewReducer from './slices/viewSlice'; // Import viewSlice
-import paymentReducer from './slices/paymentSlice';
+import orderReducer from './slices/orderSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,7 +16,7 @@ const store = configureStore({
     carts: cartReducer,
     cartSave: cartSaveReducer,
     view: viewReducer, // Tambahkan viewReducer
-    payment: paymentReducer,
+    order: orderReducer,
   },
 });
 

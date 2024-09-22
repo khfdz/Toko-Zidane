@@ -5,16 +5,30 @@ const Product = require('../models/productModel');
 const User = require('../models/userModel'); // Import model user
 
 const addItemsToCart = async (req, res) => {
-  const { items, note, discount, additionalText, additionalPrice, customerName } = req.body;
+  const { items, note, discount, additionalText, additionalPrice, customer } = req.body;
   const userId = req.user.id;
 
   try {
-    // Cari customer berdasarkan customerName yang diberikan
-    let customer = await User.findOne({ name: customerName });
-
-    // Jika customer tidak ditemukan, gunakan data default
-    if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
+    // Jika customer disertakan dalam request body, gunakan data tersebut
+    let customerData = customer;
+    if (customerData) {
+      // Validasi customer ID jika diberikan
+      if (customerData.id) {
+        const existingCustomer = await User.findById(customerData.id);
+        if (!existingCustomer) {
+          return res.status(404).json({ message: 'Customer not found' });
+        }
+      }
+    } else {
+      // Jika customer tidak disertakan, cari customer berdasarkan user ID
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      customerData = {
+        name: user.name || 'Pelanggan Setia',
+        id: user._id
+      };
     }
 
     // Cari cart berdasarkan user ID
@@ -24,16 +38,12 @@ const addItemsToCart = async (req, res) => {
     if (!cart) {
       cart = new Cart({
         user: userId,
-        customer: {
-          name: customer.name,
-          id: customer._id
-        },
+        customer: customerData,
         items: []
       });
     } else {
       // Update customer di cart
-      cart.customer.name = customer.name;
-      cart.customer.id = customer._id;
+      cart.customer = customerData;
     }
 
     // Proses menambahkan items ke cart dan menghitung subtotal
@@ -98,6 +108,7 @@ const addItemsToCart = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 const getAllCarts = async (req, res) => {
   try {

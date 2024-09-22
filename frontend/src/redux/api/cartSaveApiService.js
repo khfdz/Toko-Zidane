@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = 'http://localhost:5151';
+const API_URL = 'http://192.168.1.3:5151';
 
 // Function to get the token from cookies
 const getToken = () => Cookies.get('authToken');    
@@ -26,12 +26,6 @@ axiosInstance.interceptors.request.use(
 );
 
 // Save cart
-// export const saveCart = async (items) => {
-//     const response = await axiosInstance.post('/cart-saves/save', { items });
-//     return response.data;
-// };
-
-// Save cart
 export const saveCart = async (items) => {
     const response = await axiosInstance.post('/cart-saves/save', { items });
     if (response.status !== 200) { // Atau status lain yang dianggap sukses
@@ -39,7 +33,6 @@ export const saveCart = async (items) => {
     }
     return response.data;
 };
-
 
 // Load save cart
 export const loadCart = async (id) => {

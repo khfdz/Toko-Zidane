@@ -129,13 +129,13 @@ const SlideUp = ({ isVisible, onToggle }) => {
           isVisible ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold cursor-pointer" onClick={handleCustomerClick}>
+        <div className="flex justify-between items-center mb-4 ">
+          <h2 className="text-md text-black font-semibold cursor-pointer bg-warna2 p-2 rounded-md" onClick={handleCustomerClick}>
             Nama Pembeli: {customerName}
           </h2>
 
-          <button className="text-red-500" onClick={onToggle}>
-            Close
+          <button className="text-white font-md bg-warna1 font-bold w-8 h-8 rounded-md" onClick={onToggle}>
+            X
           </button>
         </div>
 
@@ -144,7 +144,7 @@ const SlideUp = ({ isVisible, onToggle }) => {
             <span className="bg-yellow-200 p-4 rounded-md text-center text-lg font-semibold">CART MASIH KOSONG :)</span>
           </div>
         ) : (
-          <div className="overflow-y-auto max-h-[500px]">
+          <div className="overflow-y-auto max-h-[500px] mb-2  ">
             <ul>
               {cartItems.map((item) => (
                 <li key={item._id} className="bg-white p-2 rounded-xl mb-2 flex justify-between">
@@ -162,41 +162,45 @@ const SlideUp = ({ isVisible, onToggle }) => {
           </div>
         )}
 
-        {cartItems.length > 0 && (
-          <>
-            <div>
-              <div className="bg-white p-2 rounded-xl mb-2 flex justify-between mt-1">
-                <div>
-                  <span>{additionalText}</span>
-                  <br />
-                  <span>{formatPrice(additionalPrice)}</span>
-                </div>
-                <div className="text-right">additionalTotal</div>
-              </div>
-            </div>
+{cartItems.length > 0 && (
+  <>
+    {/* Conditional rendering for additionalText and additionalPrice */}
+    {additionalText && additionalPrice > 0 && (
+      <div className="bg-white p-2 rounded-xl mb-2 flex justify-between mt-1">
+        <div>
+          <span>{additionalText}</span>
+          <br />
+          <span>{formatPrice(additionalPrice)}</span>
+        </div>
+        <div className="text-right">additionalTotal</div>
+      </div>
+    )}
 
-            <div className="mt-2 bg-white p-2 rounded-xl mb-2 text-center">
-              <span>Note: {note}</span>
-              <br />
-              <span>Potongan: {formatPrice(discount)}</span>
-            </div>
+    {/* Conditional rendering for note and discount */}
+    {(note || discount > 0) && (
+      <div className="mt-2 bg-white p-2 rounded-xl mb-2 text-center">
+        {note && <span>Note: {note}</span>}
+        {note && <br />}
+        {discount > 0 && <span>Potongan: {formatPrice(discount)}</span>}
+      </div>
+    )}
 
-            <div className="flex space-x-12 text-center mb-2">
-              <div className="bg-warna3 w-full rounded-md">Total Product: {totalProduct}</div>
-              <div className="bg-warna3 w-full rounded-md">Total Quantity: {totalQuantity}</div>
-            </div>
+    <div className="flex space-x-12 text-center mb-3 text-black">
+      <div className="bg-warna2 w-full rounded-md font-semibold p-1">Jenis: {totalProduct} item</div>
+      <div className="bg-warna2 w-full rounded-md font-semibold p-1">Total: {totalQuantity} item</div>
+    </div>
 
-            <div className="bg-white p-2 rounded-xl mb-2 text-center">
-              <span>Total: {formatPrice(totalPrice)}</span>
-            </div>
+    <div className="bg-warna2 font-semibold p-2 rounded-xl mb-2 text-center">
+      <span>Total: {formatPrice(totalPrice)}</span>
+    </div>
 
-            <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center">
-              <button onClick={handleClearCart} className="bg-red-500 w-[70px] text-white p-2">hapus</button>
-              <button onClick={handleSaveCart} className="bg-blue-500 w-[120px] text-white p-2">Simpan</button>
-              <button onClick={handlePayment} className="bg-green-500 w-[120px] text-white p-2">Bayar</button>
-            </div>
-          </>
-        )}
+    <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center font-semibold">
+      <button onClick={handleClearCart} className="bg-warna2 text-gray-800 w-[70px] p-2 rounded-md">Hapus</button>
+      <button onClick={handleSaveCart} className="bg-warna3 w-[120px] text-white p-2 rounded-md">Simpan</button>
+      <button onClick={handlePayment} className="bg-warna1 w-[180px] text-white p-2 rounded-md">Bayar</button>
+    </div>
+  </>
+)}
 
         {isPopupVisible && (
           <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">

@@ -39,57 +39,100 @@ const Sidebar = ({ toggleSidebar }) => {
     toggleSidebar();
   };
 
-  if (status === 'loading') return <div>Loading...</div>;
+  // Fungsi untuk mengambil inisial dari nama
+  const getInitials = (name) => {
+    if (!name) return 'AN'; // Default jika tidak ada nama
+    const names = name.split(' ');
+    const initials = names.map(n => n[0]).join('');
+    return initials.slice(0, 2).toUpperCase(); // Ambil dua huruf pertama
+  };
+
+  if (status === 'loading') return <div></div>;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-start z-50">
-      <div className="bg-white w-64 h-full shadow-lg p-4 ">
+      <div className="bg-white w-64 h-full shadow-lg p-4">
         <button onClick={toggleSidebar} className="focus:outline-none mb-4">
           <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
+        
+        <div className="flex items-center space-x-4 mb-6">
+          {userProfile?.avatar ? (
+            <img
+              src={userProfile.avatar}
+              alt="Profile"
+              className="w-12 h-12 rounded-full border-2 border-gray-300"
+            />
+          ) : (
+            <div
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-300 text-white font-bold text-lg border-2 border-gray-300"
+            >
+              {getInitials(userProfile?.name || 'Anonymous')}
+            </div>
+          )}
+          <div>
+            <p className="font-semibold text-lg">{userProfile?.name || 'N/A'}</p>
+            <p className="text-gray-600">{userProfile?.phone || 'No phone number'}</p>
+          </div>
+        </div>
+
         <ul className="space-y-4">
-          <p>Email: {userProfile?.email || 'N/A'}</p>
-          <p>Phone: {userProfile?.phone || 'N/A'}</p>
-          <button 
-            onClick={handleLogout} 
-            className="bg-warna1 text-white px-4 py-2"
-          >
-            Logout
-          </button>
           <li>
-            <button 
-              onClick={() => handleNavigation('/')} 
-              className="w-full text-left px-4 py-2 hover:bg-blue1 hover:text-white"
+            <button
+              onClick={() => handleNavigation('/')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
               Home
             </button>
           </li>
           <li>
-            <button 
-              onClick={() => handleNavigation('/login')} 
-              className="w-full text-left px-4 py-2 hover:bg-blue1 hover:text-white"
+            <button
+              onClick={() => handleNavigation('/login')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
               Login
             </button>
           </li>
           <li>
-            <button 
-              onClick={() => handleNavigation('/services')} 
-              className="w-full text-left px-4 py-2 hover:bg-blue1 hover:text-white"
+            <button
+              onClick={() => handleNavigation('/services')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
-              Services
+              Kelola Produk
             </button>
           </li>
           <li>
-            <button 
-              onClick={() => handleNavigation('/contact')} 
-              className="w-full text-left px-4 py-2 hover:bg-blue1 hover:text-white"
+            <button
+              onClick={() => handleNavigation('/services')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
             >
-              Contact
+              Daftar Hutang
             </button>
           </li>
+          <li>
+            <button
+              onClick={() => handleNavigation('/contact')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
+            >
+              Daftar Pembeli
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleNavigation('/contact')}
+              className="w-full text-left px-4 py-2 hover:bg-blue-500 hover:text-white"
+            >
+              Catatan Pembelian
+            </button>
+          </li>
+          <button
+            onClick={handleLogout}
+            className="bg-warna3 text-gray-800 font-semibold px-4 py-2 mt-4 w-full"
+          >
+            Logout
+          </button>
         </ul>
       </div>
     </div>

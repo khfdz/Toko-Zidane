@@ -87,7 +87,6 @@ const cartSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Middleware untuk menghitung subTotal dan totalPrice sebelum menyimpan cart
 cartSchema.pre('save', function(next) {
   this.subTotal = this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
   this.totalPrice = this.subTotal + this.additionalPrice - this.discount;
