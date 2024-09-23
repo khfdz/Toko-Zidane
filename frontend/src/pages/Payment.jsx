@@ -66,25 +66,21 @@ const PaymentPage = () => {
     navigate('/transaksi');
   };
 
-  // const calculateChangeAndDebt = (paymentValue) => {
-  //   const changeAmount = paymentValue - totalPrice;
-  //   setChange(changeAmount >= 0 ? changeAmount : 0);
-  //   setDebt(changeAmount < 0 ? Math.abs(changeAmount) : debt);
-  // };
-
   const calculateChangeAndDebt = (paymentValue) => {
     const changeAmount = paymentValue - totalPrice;
     setChange(changeAmount >= 0 ? changeAmount : 0);
-    setDebt(changeAmount < 0 ? Math.abs(changeAmount) : debt);
-    setLess(changeAmount < 0 ? Math.abs(changeAmount) : 0); // Hitung kekurangan
+    // Hapus update debt di sini
+    setLess(totalPrice - paymentValue < 0 ? 0 : totalPrice - paymentValue); // Calculate less
   };
+  
+  
 
-  const handlePaymentChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    const paymentValue = Number(value);
+  const handlePaymentChange = (value) => { // Change e to value
+    const paymentValue = Number(value); // Use value directly
     setPayment(value);
     calculateChangeAndDebt(paymentValue);
   };
+  
 
   const handleQuickPayment = (amount) => {
     setPayment(amount.toString());
@@ -186,7 +182,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg">
       <button className="absolute top-4 right-4 text-white font-semibold bg-warna3 p-2 rounded-md" onClick={handleToTransactionPage}>
         Kembali
       </button>
@@ -195,19 +191,25 @@ const PaymentPage = () => {
       <CustomerInfo customerName={customerName} customerId={customer?.id || 'ID Tidak Ditemukan'} />
       <DebtInfo debt={debt} formatPrice={formatPrice} />
       <TotalPrice totalPrice={totalPrice} formatPrice={formatPrice} />
-      <PaymentInput formatPrice={formatPrice} payment={payment} onChange={handlePaymentChange} />
+      <PaymentInput 
+        formatPrice={formatPrice} 
+        payment={payment} 
+        onChange={handlePaymentChange} 
+      />
+
       <QuickPayments
         suggestedPayments={suggestedPayments}
         onQuickPayment={handleQuickPayment}
         formatPrice={formatPrice}
-        totalPrice={totalPrice} // Ensure this is passed
+        totalPrice={totalPrice} 
       />
   
-      <ChangeDisplay change={change} formatPrice={formatPrice} />
-      <LessDisplay less={debt} formatPrice={formatPrice} />
-  
+      {/* Conditionally render ChangeDisplay and LessDisplay */}
+      {change > 0 && <ChangeDisplay change={change} formatPrice={formatPrice} />}
+      {less > 0 && <LessDisplay less={less} formatPrice={formatPrice} />}
+
       <button
-        className="bg-blue-500 text-white w-full p-2 rounded-md"
+        className="bg-warna1 font-bold text-white w-full p-2 mt-2 rounded-md"
         onClick={handlePay}
       >
         Bayar
@@ -215,7 +217,7 @@ const PaymentPage = () => {
   
       {debt > 0 && change > 0 && (
         <button
-          className="bg-yellow-500 text-white w-full p-2 rounded-md mt-2"
+          className="bg-warna3 font-bold text-white w-full p-2 rounded-md mt-2"
           onClick={handlePayAndPayDebt}
         >
           Bayar dan Bayar Hutang

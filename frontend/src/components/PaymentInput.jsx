@@ -1,33 +1,32 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 
-const PaymentInput = ({ payment, onChange, formatPrice }) => {
+const PaymentInput = ({ payment, onChange }) => {
   const [displayValue, setDisplayValue] = useState(payment);
 
   useEffect(() => {
     // Update displayValue when payment changes
-    setDisplayValue(formatPrice(Number(payment))); // Pastikan payment adalah angka
-  }, [payment, formatPrice]);
+    setDisplayValue(payment ? `Rp. ${Number(payment).toLocaleString('id-ID')}` : '');
+  }, [payment]);
 
   const handleChange = (e) => {
-    // Strip non-numeric characters and update the raw payment value
-    const rawValue = e.target.value.replace(/[^0-9]/g, '');
-    const numericValue = Number(rawValue); // Konversi ke angka
-
-    setDisplayValue(formatPrice(numericValue)); // Update display value dengan format
-    onChange(numericValue); // Panggil onChange handler dengan nilai numerik
+    const rawValue = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    setDisplayValue(rawValue ? `Rp. ${Number(rawValue).toLocaleString('id-ID')}` : ''); // Format the value with "Rp."
+    onChange(rawValue); // Call the parent onChange with the raw value
   };
 
   return (
     <div className="mb-4">
       <p className="text-lg font-semibold">Bayar:</p>
       <input
-        type="text"
-        placeholder="Masukkan jumlah pembayaran"
-        value={displayValue}
-        onChange={handleChange}
-        className="w-full p-2 border rounded-md"
-      />
+  type="text"
+  placeholder="Masukkan jumlah pembayaran"
+  value={displayValue}
+  onChange={handleChange}
+  className="w-full p-2 border-2 border-warna2 rounded-md text-xl font-semibold" // Adjusted border thickness
+/>
+
+
     </div>
   );
 };
@@ -35,7 +34,6 @@ const PaymentInput = ({ payment, onChange, formatPrice }) => {
 PaymentInput.propTypes = {
   payment: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  formatPrice: PropTypes.func.isRequired,
 };
 
 export default PaymentInput;
