@@ -17,15 +17,14 @@ const PaymentInput = ({ payment, onChange }) => {
 
   return (
     <div className="mb-4">
-      <p className="text-lg font-semibold">Bayar:</p>
+      <p className="text-lg font-semibold bg-warna2 text-center ">Bayar:</p>
       <input
   type="text"
   placeholder="Masukkan jumlah pembayaran"
   value={displayValue}
   onChange={handleChange}
-  className="w-full p-2 border-2 border-warna2 rounded-md text-xl font-semibold" // Adjusted border thickness
+  className="w-full p-2 border-2 border-warna2 rounded-md text-xl font-semibold focus:outline-none text-center" // Adjusted border thickness
 />
-
 
     </div>
   );

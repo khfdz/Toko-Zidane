@@ -1,104 +1,102 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
-const User = require('../models/userModel'); // Import model user
+const User = require('../models/userModel');
 
 const addItemsToCart = async (req, res) => {
-  const { items, note, discount, additionalText, additionalPrice, customer } = req.body;
+  const { items, additionalItems, note, discount, customer } = req.body;
   const userId = req.user.id;
 
   try {
-    // Jika customer disertakan dalam request body, gunakan data tersebut
-    let customerData = customer;
-    if (customerData) {
-      // Validasi customer ID jika diberikan
-      if (customerData.id) {
-        const existingCustomer = await User.findById(customerData.id);
-        if (!existingCustomer) {
-          return res.status(404).json({ message: 'Customer not found' });
-        }
+    let customerData;
+
+    // Validasi data pelanggan
+    if (customer && customer.id) {
+      customerData = await User.findById(customer.id);
+      if (!customerData) {
+        return res.status(404).json({ message: 'Customer not found' });
       }
     } else {
-      // Jika customer tidak disertakan, cari customer berdasarkan user ID
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
       customerData = {
-        name: user.name || 'Pelanggan Setia',
+        name: user.name || 'Unknown Customer',
         id: user._id
       };
     }
 
-    // Cari cart berdasarkan user ID
-    let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ user: userId }) || new Cart({ user: userId, customer: customerData, items: [] });
 
-    // Jika cart tidak ada, buat cart baru
-    if (!cart) {
-      cart = new Cart({
-        user: userId,
-        customer: customerData,
-        items: []
-      });
-    } else {
-      // Update customer di cart
-      cart.customer = customerData;
-    }
+    cart.customer = customerData;
 
-    // Proses menambahkan items ke cart dan menghitung subtotal
     let subTotal = 0;
-    for (const item of items) {
-      const { productId, quantity } = item;
 
-      // Cari produk berdasarkan ID
+    // Menambahkan item ke keranjang
+    for (const item of items) {
+      const { productId, quantity } = item.product; // Ambil productId dan quantity
+
       const product = await Product.findById(productId);
       if (!product) {
         return res.status(404).json({ message: `Product with ID ${productId} not found` });
       }
 
-      const price = product.wholesale_price;
-      const itemTotalPrice = price * quantity;
+      const itemTotalPrice = product.wholesale_price * quantity;
 
-      const newCartItem = {
-        product: {
-          price: price,
-          name: product.name,
-          quantity: quantity,
-          totalPriceProduct: itemTotalPrice
-        }
-      };
-
-      // Cek apakah produk sudah ada di cart
       const existingItemIndex = cart.items.findIndex(cartItem => cartItem.product.name === product.name);
-
       if (existingItemIndex > -1) {
-        // Update quantity dan total price jika produk sudah ada di cart
         cart.items[existingItemIndex].product.quantity += quantity;
         cart.items[existingItemIndex].product.totalPriceProduct += itemTotalPrice;
       } else {
-        // Tambahkan item baru ke cart
-        cart.items.push(newCartItem);
+        cart.items.push({
+          product: {
+            price: product.wholesale_price,
+            name: product.name,
+            quantity: quantity,
+            totalPriceProduct: itemTotalPrice
+          }
+        });
       }
-
-      // Tambahkan harga produk ke subtotal
       subTotal += itemTotalPrice;
     }
 
-    // Update total harga dan jumlah item
+    // Menambahkan item tambahan
+    if (additionalItems && Array.isArray(additionalItems)) {
+      for (const additionalItem of additionalItems) {
+        const { price, name, quantity } = additionalItem.product; // Ambil price, name, dan quantity
+
+        if (price == null || name == null || quantity == null) {
+          return res.status(400).json({ message: 'All additional item fields are required' });
+        }
+
+        const additionalTotalPrice = price * quantity;
+        subTotal += additionalTotalPrice; // Update subtotal
+
+        cart.additionalItems.push({
+          product: {
+            price: price,
+            name: name,
+            quantity: quantity,
+            totalPriceProduct: additionalTotalPrice
+          }
+        });
+      }
+    }
+
+    // Update total cart
     cart.subTotal = subTotal;
-    cart.totalPrice = subTotal - (discount || 0) + (additionalPrice || 0);
-    cart.totalProduct = cart.items.length;
+    cart.totalPrice = subTotal - (discount || 0);
+    cart.totalProduct = cart.items.length + (additionalItems ? additionalItems.length : 0);
     cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
+
     cart.note = note || cart.note;
     cart.discount = discount || cart.discount;
-    cart.additionalText = additionalText || cart.additionalText;
-    cart.additionalPrice = additionalPrice || cart.additionalPrice;
 
-    // Simpan perubahan ke database
+    // Simpan keranjang
     await cart.save();
 
-    // Kirim respons sukses
+    // Kirim respon sukses
     res.status(201).json({
       message: 'Items added to cart successfully',
       cart
@@ -155,20 +153,7 @@ const getCartByUser = async (req, res) => {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
-    const formattedCartItems = cart.items.map(item => ({
-      ...item.toObject(),
-      product: {
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.product.quantity,
-        totalPriceProduct: item.product.totalPriceProduct
-      }
-    }));
-
-    res.status(200).json({
-      ...cart.toObject(),
-      items: formattedCartItems
-    });
+    res.status(200).json(cart);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -191,7 +176,7 @@ const deleteCartById = async (req, res) => {
 
 const editCartById = async (req, res) => {
   const { id } = req.params;
-  const { items, note, discount, additionalText, additionalPrice, customerName } = req.body;
+  const { items, note, discount, additionalItems, customerName } = req.body;
 
   try {
     const cart = await Cart.findById(id);
@@ -199,8 +184,8 @@ const editCartById = async (req, res) => {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
-    // Update customerName jika diberikan
-    if (customerName !== undefined) {
+    // Update customerName if provided
+    if (customerName) {
       const customer = await User.findOne({ name: customerName });
       if (!customer) {
         return res.status(404).json({ message: 'Customer not found' });
@@ -209,12 +194,10 @@ const editCartById = async (req, res) => {
       cart.customer.id = customer._id;
     }
 
-    // Jika items ada dalam request, update items dan subtotal
-    if (items !== undefined) {
-      let subTotal = 0;
-
-      // Kosongkan item yang ada sebelumnya
+    // If items provided, update items and subtotal
+    if (items) {
       cart.items = [];
+      let subTotal = 0;
 
       for (const item of items) {
         const { productId, quantity } = item;
@@ -224,38 +207,30 @@ const editCartById = async (req, res) => {
           return res.status(404).json({ message: `Product with ID ${productId} not found` });
         }
 
-        const price = product.wholesale_price;
-        const itemTotalPrice = price * quantity;
+        const itemTotalPrice = product.wholesale_price * quantity;
 
-        const newCartItem = {
+        cart.items.push({
           product: {
-            price: price,
+            price: product.wholesale_price,
             name: product.name,
             quantity: quantity,
             totalPriceProduct: itemTotalPrice
           }
-        };
-
-        cart.items.push(newCartItem);
+        });
         subTotal += itemTotalPrice;
       }
 
-      // Update total jumlah produk dan total quantity
-      const totalProduct = cart.items.length;
-      const totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
-
-      // Update nilai lainnya dalam cart
+      // Update total quantities
+      cart.subTotal = subTotal;
+      cart.totalPrice = subTotal - (discount || 0);
+      cart.totalProduct = cart.items.length;
+      cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
       cart.note = note || cart.note;
       cart.discount = discount || cart.discount;
-      cart.additionalText = additionalText || cart.additionalText;
-      cart.additionalPrice = additionalPrice || cart.additionalPrice;
-      cart.subTotal = subTotal;
-      cart.totalPrice = subTotal - (discount || 0) + (additionalPrice || 0);
-      cart.totalProduct = totalProduct;
-      cart.totalQuantity = totalQuantity;
+      cart.additionalItems = additionalItems || cart.additionalItems;
     }
 
-    // Simpan perubahan
+    // Save changes
     await cart.save();
 
     res.status(200).json({
@@ -272,29 +247,19 @@ const clearCart = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Cari cart aktif berdasarkan user ID
     const cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
-    // Cek apakah cart kosong (tidak ada items atau totalnya 0)
-    if (
-      !cart.items.length ||
-      (cart.subTotal === 0 && cart.totalQuantity === 0 && cart.totalProduct === 0)
-    ) {
-      return res.status(400).json({ message: 'Cart is already empty' });
-    }
-
-    // Kosongkan cart items
+    // Clear cart items
     cart.items = [];
     cart.subTotal = 0;
     cart.totalPrice = 0;
     cart.totalProduct = 0;
     cart.totalQuantity = 0;
 
-    // Simpan perubahan
     await cart.save();
 
     res.status(200).json({

@@ -10,66 +10,64 @@ import {
 } from '../api/cartApiService';
 
 // Async thunks
-export const fetchCartForCurrentUserThunk = createAsyncThunk('carts/fetchForCurrentUser', async () => {
-  const response = await fetchCartForCurrentUser();
-  return response;
-});
+export const fetchCartForCurrentUserThunk = createAsyncThunk(
+  'carts/fetchForCurrentUser',
+  async () => {
+    const response = await fetchCartForCurrentUser();
+    console.log('Response dari API:', response); // Tambahkan log untuk seluruh response
+    return response;  // Kembalikan respons langsung, karena cart tidak ada dalam objek 'cart'
+  }
+);
 
-export const addItemsToCartThunk = createAsyncThunk('carts/addItems', async (items) => {
-  const response = await addItemsToCart(items);
-  return response;
+
+
+export const addItemsToCartThunk = createAsyncThunk('carts/addItems', async ({ items, additionalItems }) => {
+  const response = await addItemsToCart({ items, additionalItems });
+  return response.cart;  // Ambil cart dari response
 });
 
 export const fetchAllCartsThunk = createAsyncThunk('carts/fetchAllCarts', async () => {
   const response = await fetchAllCarts();
-  return response;
+  return response;  // Sesuaikan jika response memiliki struktur lain
 });
 
 export const fetchCartByIdThunk = createAsyncThunk('carts/fetchById', async (id) => {
   const response = await fetchCartById(id);
-  return response;
+  return response.cart;  // Ambil cart dari response
 });
 
 export const deleteCartByIdThunk = createAsyncThunk('carts/deleteById', async (id) => {
   await deleteCartById(id);
-  return id;
+  return id;  // Kembalikan id untuk menghapus cart di state
 });
-
-// export const editCartByIdThunk = createAsyncThunk('carts/editById', async ({ id, updates }) => {
-//   const response = await editCartById(id, updates);
-//   return response;
-// });
-
-// export const editCartByIdThunk = createAsyncThunk('carts/editById', async ({ id, updates }) => {
-//   console.log('Sending data:', { id, updates });
-//   const response = await editCartById(id, updates);
-//   console.log('Response received:', response);
-//   return response;
-// });
 
 export const editCartByIdThunk = createAsyncThunk('carts/editById', async ({ id, updates }) => {
-  console.log('Sending data:', { id, updates });
   const response = await editCartById(id, updates);
-  console.log('Response received:', response);
-  return response;
+  return response.cart;  // Ambil cart dari response
 });
-
-
 
 export const clearCartThunk = createAsyncThunk('carts/clearCart', async () => {
   const response = await clearCart();
-  return response;
+  return response.cart;  // Ambil cart dari response
 });
 
 const cartSlice = createSlice({
   name: 'carts',
-  initialState: {
-    currentCart: { items: [], totalPrice: 0 },
+  initialState: { 
+    currentCart: { 
+      items: [], 
+      additionalItems: [], 
+      totalPrice: 0, 
+      subTotal: 0, 
+      totalQuantity: 0 
+    },
     allCarts: [],
     status: 'idle',
     error: null,
   },
+  
   reducers: {},
+
   extraReducers: (builder) => {
     builder
       // Handle fetchCartForCurrentUserThunk
@@ -78,11 +76,12 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartForCurrentUserThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload || { items: [], totalPrice: 0 };
+        // Update currentCart dengan data yang diterima
+        state.currentCart = action.payload;  // Mengambil seluruh data cart
       })
       .addCase(fetchCartForCurrentUserThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
       
       // Handle addItemsToCartThunk
@@ -91,11 +90,11 @@ const cartSlice = createSlice({
       })
       .addCase(addItemsToCartThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload || { items: [], totalPrice: 0 };
+        state.currentCart = action.payload || { items: [], additionalItems: [] };
       })
       .addCase(addItemsToCartThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
 
       // Handle fetchAllCartsThunk
@@ -108,7 +107,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchAllCartsThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
 
       // Handle fetchCartByIdThunk
@@ -121,7 +120,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
 
       // Handle deleteCartByIdThunk
@@ -137,7 +136,7 @@ const cartSlice = createSlice({
       })
       .addCase(deleteCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
 
       // Handle editCartByIdThunk
@@ -152,7 +151,7 @@ const cartSlice = createSlice({
       })
       .addCase(editCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       })
 
       // Handle clearCartThunk
@@ -161,13 +160,19 @@ const cartSlice = createSlice({
       })
       .addCase(clearCartThunk.fulfilled, (state) => {
         state.status = 'succeeded';
-        state.currentCart = { items: [], totalPrice: 0 };
+        state.currentCart = { 
+          items: [], 
+          additionalItems: [], 
+          totalPrice: 0, 
+          subTotal: 0, 
+          totalQuantity: 0 
+        };
       })
       .addCase(clearCartThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.error.message; // action.error is used here
       });
-  },
+  }
 });
 
 export default cartSlice.reducer;

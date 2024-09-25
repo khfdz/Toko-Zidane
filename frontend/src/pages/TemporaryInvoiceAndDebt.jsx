@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getLatestOrderByCustomerId } from '../redux/api/orderApiService';
+import { getLatestDebtAndOrderById } from '../redux/api/debtPaymentApiService'; // Update this import
 import ReceiptView from '../components/ReceiptView';
 
-const TemporaryInvoice = () => {
+const TemporaryInvoiceAndDebt = () => {
   const location = useLocation();
   const { customerName, customerId } = location.state || {};
   const [latestOrder, setLatestOrder] = useState(null);
+  const [latestDebtPayment, setLatestDebtPayment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showReceipt, setShowReceipt] = useState(false);
 
   useEffect(() => {
-    const fetchLatestOrder = async () => {
+    const fetchLatestData = async () => {
       try {
-        const order = await getLatestOrderByCustomerId(customerId);
-        setLatestOrder(order);
+        const data = await getLatestDebtAndOrderById(customerId);
+        setLatestOrder(data.latestOrder);
+        setLatestDebtPayment(data.latestDebtPayment);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -24,7 +26,7 @@ const TemporaryInvoice = () => {
     };
 
     if (customerId) {
-      fetchLatestOrder();
+      fetchLatestData();
     }
   }, [customerId]);
 
@@ -63,15 +65,15 @@ const TemporaryInvoice = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6  rounded-lg ">
-      <h2 className="text-xl font-bold text-center mb-4">Bukti Pembayaran</h2>
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg">
+      <h2 className="text-xl font-bold text-center mb-4">Bukti Pembayaran dan Cicil Hutang</h2>
 
       <div className="mb-4">
         <strong>Customer Name:</strong> {customerName}
       </div>
 
       {latestOrder && (
-        <div className="bg-warna2">
+        <div className="bg-warna2 mb-4 p-4 rounded-lg">
           <div className="text-center bg-warna3 p-2">
             {formatDate(latestOrder.paymentDate)} - {formatTime(latestOrder.paymentDate)} WIB
           </div>
@@ -108,6 +110,40 @@ const TemporaryInvoice = () => {
         </div>
       )}
 
+{latestDebtPayment && (
+  <div className="bg-warna2 mb-4 p-4 rounded-lg">
+    <div className="text-center bg-warna3 p-2">
+      {formatDate(latestDebtPayment.paymentDate)} - {formatTime(latestDebtPayment.paymentDate)} WIB
+    </div>
+    <table className="min-w-full border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th className="border-b border-gray-800 p-2 text-left">Detail</th>
+          <th className="border-b border-gray-800 p-2 text-right">Jumlah</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border-b border-gray-400 p-2"><strong>No Cicilan:</strong></td>
+          <td className="border-b border-gray-400 p-2 text-right">{latestDebtPayment.payDebt_id}</td>
+        </tr>
+        <tr>
+          <td className="border-b border-gray-400 p-2"><strong>No Struk:</strong></td>
+          <td className="border-b border-gray-400 p-2 text-right">{latestDebtPayment.orders[0].order_id}</td>
+        </tr>
+        <tr>
+          <td className="border-b border-gray-400 p-2"><strong>Cicil Hutang:</strong></td>
+          <td className="border-b border-gray-400 p-2 text-right">{formatPrice(latestDebtPayment.amount)}</td>
+        </tr>
+        <tr>
+          <td className="border-b border-gray-400 p-2"><strong>Sisa Hutang:</strong></td>
+          <td className="border-b border-gray-400 p-2 text-right">{formatPrice(latestDebtPayment.orders[0].debt)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+)}
+
       {/* Tombol-tombol */}
       <div className="mt-6 flex justify-center space-x-4">
         <button
@@ -135,4 +171,4 @@ const TemporaryInvoice = () => {
   );
 };
 
-export default TemporaryInvoice;
+export default TemporaryInvoiceAndDebt;

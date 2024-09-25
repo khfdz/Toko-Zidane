@@ -2,7 +2,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
-import { fetchTotalDebtByCustomerId, createNewOrder, payDebtByCustomerId } from '../redux/slices/orderSlice';
+import { fetchTotalDebtByCustomerId, createNewOrder } from '../redux/slices/orderSlice';
+import { createNewDebtPayment } from '../redux/slices/debtPaymentSlice'; // Ganti import ini
 
 import CustomerInfo from '../components/CustomerInfo';
 import DebtInfo from '../components/DebtInfo';
@@ -23,13 +24,11 @@ const PaymentPage = () => {
   const [payment, setPayment] = useState('');
   const [change, setChange] = useState(0);
   const [debt, setDebt] = useState(0);
-  const [manualDebtPayment, setManualDebtPayment] = useState('');
   const [suggestedPayments, setSuggestedPayments] = useState([]);
   const [customerName, setCustomerName] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showPayAndPayDebtConfirmation, setShowPayAndPayDebtConfirmation] = useState(false);
   const [less, setLess] = useState(0);
-  
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -69,18 +68,14 @@ const PaymentPage = () => {
   const calculateChangeAndDebt = (paymentValue) => {
     const changeAmount = paymentValue - totalPrice;
     setChange(changeAmount >= 0 ? changeAmount : 0);
-    // Hapus update debt di sini
-    setLess(totalPrice - paymentValue < 0 ? 0 : totalPrice - paymentValue); // Calculate less
+    setLess(totalPrice - paymentValue < 0 ? 0 : totalPrice - paymentValue);
   };
-  
-  
 
-  const handlePaymentChange = (value) => { // Change e to value
-    const paymentValue = Number(value); // Use value directly
+  const handlePaymentChange = (value) => {
+    const paymentValue = Number(value);
     setPayment(value);
     calculateChangeAndDebt(paymentValue);
   };
-  
 
   const handleQuickPayment = (amount) => {
     setPayment(amount.toString());
@@ -116,10 +111,9 @@ const PaymentPage = () => {
         debt: 0,
         totalPrice
       }));
-      
+
       alert('Pembayaran berhasil!');
 
-      // Navigasi ke halaman TemporaryInvoice dan kirim data customer
       navigate('/temporary-invoice', {
         state: {
           customerName,
@@ -149,18 +143,17 @@ const PaymentPage = () => {
         debt: 0,
         totalPrice
       }));
-      
-      const debtPayment = manualDebtPayment ? Number(manualDebtPayment) : change;
-      
-      await dispatch(payDebtByCustomerId({
+
+      const debtPayment = change;
+
+      await dispatch(createNewDebtPayment({ // Ganti dengan createNewDebtPayment
         customerId: customer.id,
-        paymentAmount: debtPayment
+        amount: debtPayment
       }));
-      
+
       alert('Pembayaran dan pembayaran hutang berhasil!');
 
-      // Navigasi ke halaman TemporaryInvoice dan kirim data customer
-      navigate('/temporary-invoice', {
+      navigate('/temporary-invoice-and-debt', {
         state: {
           customerName,
           customerId: customer.id,
@@ -172,22 +165,19 @@ const PaymentPage = () => {
     }
   };
 
-  const handleManualDebtPaymentChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    setManualDebtPayment(value);
-  };
-
   const formatPrice = (price) => {
     return `Rp. ${price.toLocaleString('id-ID')}`;
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg">
-      <button className="absolute top-4 right-4 text-white font-semibold bg-warna3 p-2 rounded-md" onClick={handleToTransactionPage}>
-        Kembali
-      </button>
-      <h1 className="text-2xl font-bold mb-6 text-center">Pembayaran</h1>
-  
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-left flex-grow">Pembayaran</h1>
+        <button className="text-white font-semibold bg-warna3 p-2 rounded-md" onClick={handleToTransactionPage}>
+          Kembali
+        </button>
+      </div>
+
       <CustomerInfo customerName={customerName} customerId={customer?.id || 'ID Tidak Ditemukan'} />
       <DebtInfo debt={debt} formatPrice={formatPrice} />
       <TotalPrice totalPrice={totalPrice} formatPrice={formatPrice} />
@@ -203,8 +193,7 @@ const PaymentPage = () => {
         formatPrice={formatPrice}
         totalPrice={totalPrice} 
       />
-  
-      {/* Conditionally render ChangeDisplay and LessDisplay */}
+
       {change > 0 && <ChangeDisplay change={change} formatPrice={formatPrice} />}
       {less > 0 && <LessDisplay less={less} formatPrice={formatPrice} />}
 
@@ -214,7 +203,7 @@ const PaymentPage = () => {
       >
         Bayar
       </button>
-  
+
       {debt > 0 && change > 0 && (
         <button
           className="bg-warna3 font-bold text-white w-full p-2 rounded-md mt-2"
@@ -223,19 +212,17 @@ const PaymentPage = () => {
           Bayar dan Bayar Hutang
         </button>
       )}
-  
+
       <ConfirmationDialog
         show={showConfirmation}
         onClose={handleCloseConfirmation}
         onConfirm={confirmPayment}
       />
-  
+
       <PayAndDebtConfirmationDialog
         show={showPayAndPayDebtConfirmation}
         onClose={() => setShowPayAndPayDebtConfirmation(false)}
         onConfirm={confirmPayAndPayDebt}
-        manualDebtPayment={manualDebtPayment}
-        onManualDebtPaymentChange={handleManualDebtPaymentChange}
         formatPrice={formatPrice}
         change={change}
       />

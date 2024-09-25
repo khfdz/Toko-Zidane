@@ -12,6 +12,7 @@ export default {
         warna3: '#FFAA3C',
         warna4: '#FFFFFF',
         warna5: '#504D4C',
+        warna6: '#E2953D',
         // Add opacity variations for warna1
         warna1op1: 'rgba(144, 77, 61, 0.1)', // 10%
         warna1op2: 'rgba(144, 77, 61, 0.2)', // 20%

@@ -5,6 +5,7 @@ import Transaction from './pages/Transaction';
 import Login from './pages/Login';
 import Payment from './pages/Payment';
 import TemporaryInvoice from './pages/TemporaryInvoice';
+import TemporaryInvoiceAndDebt from './pages/TemporaryInvoiceAndDebt';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/transaksi" element={<Transaction />} />
             <Route path="/payment" element={<Payment />} />
             <Route path="/temporary-invoice" element={<TemporaryInvoice />} />
+            <Route path="/temporary-invoice-and-debt" element={<TemporaryInvoiceAndDebt />} />
           </Routes>
         </div>
       </div>

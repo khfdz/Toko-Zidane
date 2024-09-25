@@ -2,10 +2,10 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // IP COMPUTER
-// const API_URL = 'http://192.168.1.3:5151';
+const API_URL = 'http://192.168.1.3:5151';
 
 // IP LAPTOP
-const API_URL = `http://192.168.161.92:5151`;
+// const API_URL = `http://192.168.161.92:5151`;
 
 // Function to get the token from cookies
 const getToken = () => Cookies.get('authToken');
@@ -36,8 +36,8 @@ export const fetchCartForCurrentUser = async () => {
 };
 
 // Add items to the cart
-export const addItemsToCart = async (items) => {
-    const response = await axiosInstance.post('/carts/add', { items });
+export const addItemsToCart = async (items, additionalItems) => {
+    const response = await axiosInstance.post('/carts/add', { items, additionalItems });
     return response.data;
 };
 
