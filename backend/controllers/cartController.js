@@ -4,7 +4,7 @@ const Product = require('../models/productModel');
 const User = require('../models/userModel');
 
 const addItemsToCart = async (req, res) => {
-  const { items, additionalItems, note, discount, customer } = req.body;
+  const { items, additionalItems, note, discount, discountText, customer } = req.body;
   const userId = req.user.id;
 
   try {
@@ -92,6 +92,7 @@ const addItemsToCart = async (req, res) => {
 
     cart.note = note || cart.note;
     cart.discount = discount || cart.discount;
+    cart.discountText = discountText || cart.discountText;
 
     // Simpan keranjang
     await cart.save();
@@ -176,7 +177,7 @@ const deleteCartById = async (req, res) => {
 
 const editCartById = async (req, res) => {
   const { id } = req.params;
-  const { items, note, discount, additionalItems, customerName } = req.body;
+  const { items, note, discount, discountText, additionalItems, customerName } = req.body;
 
   try {
     const cart = await Cart.findById(id);
@@ -225,8 +226,10 @@ const editCartById = async (req, res) => {
       cart.totalPrice = subTotal - (discount || 0);
       cart.totalProduct = cart.items.length;
       cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
+      
       cart.note = note || cart.note;
       cart.discount = discount || cart.discount;
+      cart.discountText = discountText || cart.discountText;
       cart.additionalItems = additionalItems || cart.additionalItems;
     }
 

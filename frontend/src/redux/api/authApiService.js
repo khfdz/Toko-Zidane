@@ -2,9 +2,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // IP COMPUTER
-const API_URL = 'http://192.168.1.3:5151';
+// const API_URL = 'http://192.168.1.3:5151';
 
-// IP LAPTOP
+//IP LOCALHOST 
+const API_URL = 'http://localhost:5151';
+
+//IP LAPTOP
 // const API_URL = `http://192.168.161.92:5151`;
 
 // Function to get the token from cookies

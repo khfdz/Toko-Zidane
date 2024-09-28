@@ -92,6 +92,10 @@ const cartSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  discountText: {
+    type: String,
+    default: ''
+  },
   subTotal: {
     type: Number,
     required: true,

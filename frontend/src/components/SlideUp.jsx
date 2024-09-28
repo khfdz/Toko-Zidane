@@ -97,6 +97,7 @@ const handleSaveCart = () => {
   const additionalItems = cart.additionalItems || []; // Ambil additionalItems
   const note = cart.note || '';
   const discount = cart.discount || 0;
+  const discountText = cart.discountText || '';
   const additionalText = cart.additionalText || '';
   const additionalPrice = cart.additionalPrice || 0;
   const totalProduct = cart.totalProduct || 0;
@@ -111,12 +112,20 @@ const handleSaveCart = () => {
   return (
     <div>
       <div
-        className={`z-50 fixed bottom-0 left-0 w-full h-full bg-gray-300 p-4 transition-transform duration-500 ease-in-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`z-50 fixed bottom-0 left-0 w-full h-full bg-gray-300 p-4 pr-7 transition-transform duration-500 ease-in-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
       >
         <div className="flex justify-between items-center mb-4 ">
           <h2 className="text-md text-black font-semibold cursor-pointer bg-warna2 p-2 rounded-md" onClick={handleCustomerClick}>
             Nama Pembeli: {customerName}
           </h2>
+
+          <button className='text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md'>
+            %
+          </button>
+
+          <button className='text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md'>
+            N
+          </button>
 
           <button className="text-white font-md bg-warna1 font-bold w-8 h-8 rounded-md" onClick={onToggle}>
             X
@@ -128,7 +137,7 @@ const handleSaveCart = () => {
             <span className="bg-yellow-200 p-4 rounded-md text-center text-lg font-semibold">CART MASIH KOSONG :)</span>
           </div>
         ) : (
-          <div className="overflow-y-auto max-h-[500px] mb-2">
+          <div className="overflow-y-auto max-h-[500px] mb-2 drop-shadow-md rounded-xl">
             <ul>
               {combinedItems.map((item) => (
                 <li key={item._id} className="bg-white p-2 rounded-xl mb-2 flex justify-between">
@@ -137,7 +146,7 @@ const handleSaveCart = () => {
                     <br />
                     <span>{item.product.quantity} x {formatPrice(item.product.price)}</span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right mt-2">
                     <span>{formatPrice(item.product.totalPriceProduct || item.product.price * item.product.quantity)}</span>
                   </div>
                 </li>
@@ -169,13 +178,16 @@ const handleSaveCart = () => {
             {(note || discount > 0) && (
               <div className="mt-2 bg-white p-2 rounded-xl mb-2">
                 <div className="flex justify-between items-center">
-                  <p>Total Sementara</p>
+                  <p>Total Sementara:</p>
                   <span>{formatPrice(subTotal)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between items-center">
-                    <span>Diskon</span>
-                    <span>- {formatPrice(discount)}</span>
+              <span className='w-[230px] break-words'>
+               Diskon:  {discountText}
+              </span>
+<span>- {formatPrice(discount)}</span>
+
                   </div>
                 )}
               </div>

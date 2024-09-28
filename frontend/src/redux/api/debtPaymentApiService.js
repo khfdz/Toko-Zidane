@@ -1,7 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API_URL = 'http://192.168.1.3:5151';
+// const API_URL = 'http://192.168.1.3:5151';
+
+//IP LOCALHOST 
+const API_URL = 'http://localhost:5151';
 
 const getToken = () => Cookies.get('authToken');
 
