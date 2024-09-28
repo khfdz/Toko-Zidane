@@ -1,0 +1,230 @@
+[{
+  "_id": {
+    "$oid": "66e98b27d464231f0de7b9d2"
+  },
+  "customer": {
+    "name": "Dhikaa",
+    "id": {
+      "$oid": "66e989848b738255f1c9687f"
+    }
+  },
+  "user": {
+    "$oid": "66e989848b738255f1c9687f"
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Shinzui",
+        "quantity": 10,
+        "totalPriceProduct": 45000
+      },
+      "_id": {
+        "$oid": "66f3e463acba08e5f8e5a187"
+      }
+    }
+  ],
+  "totalProduct": 24,
+  "totalQuantity": 42,
+  "note": "Ini adalah catatan untuk keranjang.",
+  "discount": 100000,
+  "additionalText": "",
+  "additionalPrice": 0,
+  "subTotal": 241000,
+  "totalPrice": 141000,
+  "cr_id": "CR-D448F892",
+  "createdAt": {
+    "$date": "2024-09-17T13:59:03.617Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-26T09:53:19.472Z"
+  },
+  "__v": 121,
+  "additionalItems": [
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "40c3ffb6-6f91-4b7d-bd41-3773287d36bc"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "affd4556-109d-473b-a466-c1b3aa584ab1"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "4866ee68-b4c0-4f0c-968e-e41b8a29b267"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "4bd7f69e-0025-4ba3-8886-6d3ba321e486"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "462006fc-729e-4df4-b5b2-73cfc37ecb45"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "13838ed6-91c9-4061-b679-27dc1d6ae4ce"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "7a714c98-e518-470f-a99c-90ebbfed788a"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "c300a6db-e7cc-4953-a6dc-142b295a5eb5"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "b69e4b10-71ff-4b53-b40a-142ee2f900e7"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "f26b499d-a021-4b0d-abe0-c78dbdfdef47"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "f4c10f2f-70b1-4ae2-bb3e-54efd15dc9f3"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "6482d369-5126-4990-b82e-4db9a06b2d4c"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "5753906b-d3c7-4767-96c4-703e24dd95b0"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "40d29bc1-dae1-42c4-8050-b04c06bd0c68"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "dae79f52-61c8-4396-b016-28dcd4227184"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "cfac2228-40b3-4cfc-b758-6a0076520f73"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "ad8e0287-4b28-4c36-8062-72ccd9f8408d"
+    },
+    {
+      "product": {
+        "price": 7000,
+        "name": "Produk Tambahan B",
+        "quantity": 2
+      },
+      "_id": "9144412d-7d85-4275-9a20-cbb6c3b52441"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "559f21dd-bbc0-409b-a771-ea277e5a8703"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "09115a24-b9a8-4d8d-b4d8-4081cffbbc46"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "88cc2f2d-f4f0-43a1-98ea-840f71e4056c"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "92b9ebcf-8c71-4064-993b-7d589d9ee273"
+    },
+    {
+      "product": {
+        "price": 5000,
+        "name": "Produk Tambahan A",
+        "quantity": 1
+      },
+      "_id": "12c5366a-c1b5-4f79-bd31-76e92fb4a8a6"
+    }
+  ],
+  "discountText": "Potongan tadi lupa"
+}]

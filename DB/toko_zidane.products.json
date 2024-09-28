@@ -1,0 +1,440 @@
+[{
+  "_id": {
+    "$oid": "66c8248f948e4045565f6ffb"
+  },
+  "category": {
+    "$oid": "66c823dc948e4045565f6ff4"
+  },
+  "name": "Shinzui",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "060676",
+  "image": "/uploads/products/1724392591225-super.png",
+  "pd_id": "PD-9AD9D7FF",
+  "createdAt": {
+    "$date": "2024-08-23T05:56:31.228Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:56:31.228Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c82493948e4045565f6ffd"
+  },
+  "category": {
+    "$oid": "66c823dc948e4045565f6ff4"
+  },
+  "name": "Citra",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392595638-super.png",
+  "pd_id": "PD-BA7C0ECD",
+  "createdAt": {
+    "$date": "2024-08-23T05:56:35.641Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:56:35.641Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c82499948e4045565f6fff"
+  },
+  "category": {
+    "$oid": "66c823dc948e4045565f6ff4"
+  },
+  "name": "Lux",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392601535-super.png",
+  "pd_id": "PD-490B7C3A",
+  "createdAt": {
+    "$date": "2024-08-23T05:56:41.537Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:56:41.537Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c824c3948e4045565f7005"
+  },
+  "category": {
+    "$oid": "66c823e2948e4045565f6ff7"
+  },
+  "name": "Super",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392643545-super.png",
+  "pd_id": "PD-DE3B8197",
+  "createdAt": {
+    "$date": "2024-08-23T05:57:23.558Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:57:23.558Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c824d0948e4045565f7008"
+  },
+  "category": {
+    "$oid": "66c823e2948e4045565f6ff7"
+  },
+  "name": "Super",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392656429-super.png",
+  "pd_id": "PD-69B1097A",
+  "createdAt": {
+    "$date": "2024-08-23T05:57:36.431Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:57:36.431Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c824d4948e4045565f700a"
+  },
+  "category": {
+    "$oid": "66c823e2948e4045565f6ff7"
+  },
+  "name": "Samsu",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392660551-super.png",
+  "pd_id": "PD-DFC862E0",
+  "createdAt": {
+    "$date": "2024-08-23T05:57:40.553Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:57:40.553Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c824d8948e4045565f700c"
+  },
+  "category": {
+    "$oid": "66c823e2948e4045565f6ff7"
+  },
+  "name": "Filter",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724392664172-super.png",
+  "pd_id": "PD-DC9843CB",
+  "createdAt": {
+    "$date": "2024-08-23T05:57:44.174Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:57:44.174Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c9c424faf9cb470eac6d91"
+  },
+  "category": {
+    "$oid": "66c996f5ace4c4568f813b38"
+  },
+  "name": "Jaguar",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724498980168-super.png",
+  "pd_id": "PD-229839A7",
+  "createdAt": {
+    "$date": "2024-08-24T11:29:40.177Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-24T11:29:40.177Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c9c428faf9cb470eac6d93"
+  },
+  "category": {
+    "$oid": "66c996f5ace4c4568f813b38"
+  },
+  "name": "Panser",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724498984041-super.png",
+  "pd_id": "PD-42C63DF6",
+  "createdAt": {
+    "$date": "2024-08-24T11:29:44.063Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-24T11:29:44.063Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb34e08e2c46b44d6e9b25"
+  },
+  "category": {
+    "$oid": "66c996f5ace4c4568f813b38"
+  },
+  "name": "Panser",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724593376296-super.png",
+  "pd_id": "PD-43FB108F",
+  "createdAt": {
+    "$date": "2024-08-25T13:42:56.306Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T13:42:56.306Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb398398e993309c515556"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Clear",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724594563463-super.png",
+  "pd_id": "PD-12010C35",
+  "createdAt": {
+    "$date": "2024-08-25T14:02:43.470Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:02:43.470Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb3a01152e8223a5fb55d2"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Clear",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724594689055-super.png",
+  "pd_id": "PD-1D74E633",
+  "createdAt": {
+    "$date": "2024-08-25T14:04:49.070Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:04:49.070Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb3a02152e8223a5fb55d5"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Clear",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724594690216-super.png",
+  "pd_id": "PD-EA3F64B2",
+  "createdAt": {
+    "$date": "2024-08-25T14:04:50.221Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:04:50.221Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb3a57152e8223a5fb55d9"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Sunsilk",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724594775343-super.png",
+  "pd_id": "PD-75B93949",
+  "createdAt": {
+    "$date": "2024-08-25T14:06:15.348Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:06:15.348Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb3af6abea0b400de05199"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Sunsilk",
+  "cost_price": 0,
+  "wholesale_price": 4500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724594934007-super.png",
+  "pd_id": "PD-A7346491",
+  "createdAt": {
+    "$date": "2024-08-25T14:08:54.161Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:08:54.161Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cd58ca3d27994a1f7f9a29"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Head N Shoulder",
+  "cost_price": 0,
+  "wholesale_price": 9500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724733642341-super.png",
+  "pd_id": "PD-D61C9449",
+  "createdAt": {
+    "$date": "2024-08-27T04:40:42.378Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T04:40:42.378Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cd58d23d27994a1f7f9a2c"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Emeron",
+  "cost_price": 0,
+  "wholesale_price": 9500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724733650071-super.png",
+  "pd_id": "PD-D033CE7E",
+  "createdAt": {
+    "$date": "2024-08-27T04:40:50.246Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T04:40:50.246Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cd58d63d27994a1f7f9a2f"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Zinc",
+  "cost_price": 0,
+  "wholesale_price": 9500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1724733654220-super.png",
+  "pd_id": "PD-080CC8D5",
+  "createdAt": {
+    "$date": "2024-08-27T04:40:54.317Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T04:40:54.317Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ec5360d654e15c2010faf0"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Makarizo",
+  "cost_price": 0,
+  "wholesale_price": 9500,
+  "stock": 0,
+  "barcode": "0",
+  "image": "/uploads/products/1726763872395-super.png",
+  "pd_id": "PD-F2C92EEA",
+  "createdAt": {
+    "$date": "2024-09-19T16:37:52.440Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T16:37:52.440Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ec5370d654e15c2010faf3"
+  },
+  "category": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "name": "Kodomo",
+  "cost_price": 0,
+  "wholesale_price": 9500,
+  "stock": 0,
+  "barcode": "0",
+  "image": null,
+  "pd_id": "PD-53AE3D88",
+  "createdAt": {
+    "$date": "2024-09-19T16:38:08.181Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T16:38:08.181Z"
+  },
+  "__v": 0
+}]

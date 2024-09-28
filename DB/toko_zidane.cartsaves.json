@@ -1,0 +1,538 @@
+[{
+  "_id": {
+    "$oid": "66e7e8cc63be476579500d3e"
+  },
+  "user": {
+    "$oid": "66c63ed7be04a6c7e5fd8ee6"
+  },
+  "customer": {
+    "name": "",
+    "id": {
+      "$oid": "66c63ed7be04a6c7e5fd8ee6"
+    }
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Samsu",
+        "quantity": 25,
+        "totalPriceProduct": 112500
+      },
+      "_id": {
+        "$oid": "66e7e8c563be476579500ce2"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Super",
+        "quantity": 20,
+        "totalPriceProduct": 90000
+      },
+      "_id": {
+        "$oid": "66e7e8c563be476579500cf8"
+      }
+    }
+  ],
+  "totalProduct": 2,
+  "totalQuantity": 45,
+  "note": "",
+  "discount": 0,
+  "additionalText": "",
+  "additionalPrice": 0,
+  "subTotal": 202500,
+  "totalPrice": 202500,
+  "save_id": "SAVE-0C161140",
+  "savedAt": {
+    "$date": "2024-09-16T08:14:04.919Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-16T08:14:04.919Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-16T08:14:04.919Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66e9b20bd464231f0de7bb10"
+  },
+  "user": {
+    "$oid": "66e989848b738255f1c9687f"
+  },
+  "customer": {
+    "name": "Dhikaa",
+    "id": {
+      "$oid": "66e989848b738255f1c9687f"
+    }
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Filter",
+        "quantity": 30,
+        "totalPriceProduct": 135000
+      },
+      "_id": {
+        "$oid": "66e9b203d464231f0de7bacc"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Samsu",
+        "quantity": 15,
+        "totalPriceProduct": 67500
+      },
+      "_id": {
+        "$oid": "66e9b204d464231f0de7badb"
+      }
+    }
+  ],
+  "totalProduct": 2,
+  "totalQuantity": 45,
+  "note": "",
+  "discount": 0,
+  "additionalText": "",
+  "additionalPrice": 0,
+  "subTotal": 202500,
+  "totalPrice": 202500,
+  "save_id": "SAVE-748CBB70",
+  "savedAt": {
+    "$date": "2024-09-17T16:44:59.353Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-17T16:44:59.353Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-17T16:44:59.353Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ec5592d654e15c20111e58"
+  },
+  "user": {
+    "$oid": "66e989848b738255f1c9687f"
+  },
+  "customer": {
+    "name": "Dhikaa",
+    "id": {
+      "$oid": "66e989848b738255f1c9687f"
+    }
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Shinzui",
+        "quantity": 937,
+        "totalPriceProduct": 4216500
+      },
+      "_id": {
+        "$oid": "66ebcebd2e20f9732c5445f5"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Citra",
+        "quantity": 1654,
+        "totalPriceProduct": 7443000
+      },
+      "_id": {
+        "$oid": "66ebced72e20f9732c544633"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Lux",
+        "quantity": 1062,
+        "totalPriceProduct": 4779000
+      },
+      "_id": {
+        "$oid": "66ebced82e20f9732c54464f"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Super",
+        "quantity": 1629,
+        "totalPriceProduct": 7330500
+      },
+      "_id": {
+        "$oid": "66ebcedc2e20f9732c544692"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Samsu",
+        "quantity": 348,
+        "totalPriceProduct": 1566000
+      },
+      "_id": {
+        "$oid": "66ebcee02e20f9732c544715"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Filter",
+        "quantity": 263,
+        "totalPriceProduct": 1183500
+      },
+      "_id": {
+        "$oid": "66ebcee12e20f9732c544743"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Panser",
+        "quantity": 57,
+        "totalPriceProduct": 256500
+      },
+      "_id": {
+        "$oid": "66ebf091d654e15c2010638d"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Jaguar",
+        "quantity": 87,
+        "totalPriceProduct": 391500
+      },
+      "_id": {
+        "$oid": "66ebf3cbd654e15c20107316"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Clear",
+        "quantity": 82,
+        "totalPriceProduct": 369000
+      },
+      "_id": {
+        "$oid": "66ebfaf8d654e15c201087c1"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Sunsilk",
+        "quantity": 213,
+        "totalPriceProduct": 958500
+      },
+      "_id": {
+        "$oid": "66ec06c5d654e15c2010a680"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Emeron",
+        "quantity": 113,
+        "totalPriceProduct": 1073500
+      },
+      "_id": {
+        "$oid": "66ec34aad654e15c2010a81e"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Zinc",
+        "quantity": 26,
+        "totalPriceProduct": 247000
+      },
+      "_id": {
+        "$oid": "66ec3771d654e15c2010ab93"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Head N Shoulder",
+        "quantity": 71,
+        "totalPriceProduct": 674500
+      },
+      "_id": {
+        "$oid": "66ec38ccd654e15c2010b05b"
+      }
+    }
+  ],
+  "totalProduct": 13,
+  "totalQuantity": 6542,
+  "note": "",
+  "discount": 0,
+  "additionalText": "",
+  "additionalPrice": 0,
+  "subTotal": 30489000,
+  "totalPrice": 30489000,
+  "save_id": "SAVE-DFEB6586",
+  "savedAt": {
+    "$date": "2024-09-19T16:47:14.564Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-19T16:47:14.565Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T16:47:14.565Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f3a3eff6a85e691dc30354"
+  },
+  "user": {
+    "$oid": "66e989848b738255f1c9687f"
+  },
+  "customer": {
+    "name": "Dhikaa",
+    "id": {
+      "$oid": "66e989848b738255f1c9687f"
+    }
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Filter",
+        "quantity": 147,
+        "totalPriceProduct": 661500
+      },
+      "_id": {
+        "$oid": "66f2ee3094671e486a4ae0f4"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Citra",
+        "quantity": 11,
+        "totalPriceProduct": 49500
+      },
+      "_id": {
+        "$oid": "66f2ee4b94671e486a4ae19e"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Lux",
+        "quantity": 10,
+        "totalPriceProduct": 45000
+      },
+      "_id": {
+        "$oid": "66f2ee4e94671e486a4ae1b1"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Super",
+        "quantity": 20,
+        "totalPriceProduct": 90000
+      },
+      "_id": {
+        "$oid": "66f2ee4f94671e486a4ae1bd"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Samsu",
+        "quantity": 10,
+        "totalPriceProduct": 45000
+      },
+      "_id": {
+        "$oid": "66f2ee5094671e486a4ae1d8"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Shinzui",
+        "quantity": 10,
+        "totalPriceProduct": 45000
+      },
+      "_id": {
+        "$oid": "66f2ee5194671e486a4ae1e8"
+      }
+    }
+  ],
+  "totalProduct": 6,
+  "totalQuantity": 208,
+  "note": "Ini adalah catatan tambahan untuk semua item",
+  "discount": 50000,
+  "additionalText": "Biaya tambahan untuk pengiriman",
+  "additionalPrice": 2000,
+  "subTotal": 936000,
+  "totalPrice": 888000,
+  "save_id": "SAVE-1022D1EA",
+  "savedAt": {
+    "$date": "2024-09-25T05:47:27.869Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-25T05:47:27.871Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T05:47:27.871Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f3abb8a75d193793859615"
+  },
+  "user": {
+    "$oid": "66e989848b738255f1c9687f"
+  },
+  "customer": {
+    "name": "Dhikaa",
+    "id": {
+      "$oid": "66e989848b738255f1c9687f"
+    }
+  },
+  "items": [
+    {
+      "product": {
+        "price": 4500,
+        "name": "Super",
+        "quantity": 47,
+        "totalPriceProduct": 211500
+      },
+      "_id": {
+        "$oid": "66f3a3f2f6a85e691dc3037e"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Lux",
+        "quantity": 7,
+        "totalPriceProduct": 31500
+      },
+      "_id": {
+        "$oid": "66f3a9e5a75d193793859446"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Samsu",
+        "quantity": 6,
+        "totalPriceProduct": 27000
+      },
+      "_id": {
+        "$oid": "66f3a9e6a75d193793859462"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Filter",
+        "quantity": 1,
+        "totalPriceProduct": 4500
+      },
+      "_id": {
+        "$oid": "66f3a9e7a75d193793859479"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Citra",
+        "quantity": 2,
+        "totalPriceProduct": 9000
+      },
+      "_id": {
+        "$oid": "66f3a9e9a75d193793859494"
+      }
+    },
+    {
+      "product": {
+        "price": 4500,
+        "name": "Shinzui",
+        "quantity": 1,
+        "totalPriceProduct": 4500
+      },
+      "_id": {
+        "$oid": "66f3a9e9a75d1937938594b3"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Kodomo",
+        "quantity": 6,
+        "totalPriceProduct": 57000
+      },
+      "_id": {
+        "$oid": "66f3a9f5a75d1937938594e1"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Makarizo",
+        "quantity": 6,
+        "totalPriceProduct": 57000
+      },
+      "_id": {
+        "$oid": "66f3a9f6a75d193793859508"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Zinc",
+        "quantity": 6,
+        "totalPriceProduct": 57000
+      },
+      "_id": {
+        "$oid": "66f3a9f6a75d193793859533"
+      }
+    },
+    {
+      "product": {
+        "price": 9500,
+        "name": "Emeron",
+        "quantity": 6,
+        "totalPriceProduct": 57000
+      },
+      "_id": {
+        "$oid": "66f3a9f7a75d193793859562"
+      }
+    }
+  ],
+  "totalProduct": 10,
+  "totalQuantity": 88,
+  "note": "Ini adalah catatan tambahan untuk semua item",
+  "discount": 50000,
+  "additionalText": "Biaya tambahan untuk pengiriman",
+  "additionalPrice": 2000,
+  "subTotal": 516000,
+  "totalPrice": 468000,
+  "save_id": "SAVE-7283D1BF",
+  "savedAt": {
+    "$date": "2024-09-25T06:20:40.958Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-25T06:20:40.960Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-25T06:20:40.960Z"
+  },
+  "__v": 0
+}]

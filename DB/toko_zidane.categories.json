@@ -1,0 +1,98 @@
+[{
+  "_id": {
+    "$oid": "66c823dc948e4045565f6ff4"
+  },
+  "ct_id": "CT-D4FFFED0",
+  "name": "Sabun",
+  "createdAt": {
+    "$date": "2024-08-23T05:53:32.364Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:53:32.364Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c823e2948e4045565f6ff7"
+  },
+  "ct_id": "CT-52EB9460",
+  "name": "Rokok",
+  "createdAt": {
+    "$date": "2024-08-23T05:53:38.791Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-23T05:53:38.791Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c996f5ace4c4568f813b38"
+  },
+  "ct_id": "CT-E4178F64",
+  "name": "Ciki",
+  "createdAt": {
+    "$date": "2024-08-24T08:16:53.330Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-24T08:16:53.330Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66cb3912f0018d641aea9178"
+  },
+  "ct_id": "CT-CB5845F5",
+  "name": "Sampo",
+  "createdAt": {
+    "$date": "2024-08-25T14:00:50.189Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-25T14:00:50.189Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ebe3472e20f9732c544b52"
+  },
+  "ct_id": "CT-5C700AE4",
+  "name": "Snack",
+  "createdAt": {
+    "$date": "2024-09-19T08:39:35.983Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T08:39:35.983Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ebe34f2e20f9732c544b55"
+  },
+  "ct_id": "CT-CA02B608",
+  "name": "Obat",
+  "createdAt": {
+    "$date": "2024-09-19T08:39:43.854Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T08:39:43.854Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ebe3622e20f9732c544be2"
+  },
+  "ct_id": "CT-3024F0AC",
+  "name": "Minuman",
+  "createdAt": {
+    "$date": "2024-09-19T08:40:02.672Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-19T08:40:02.672Z"
+  },
+  "__v": 0
+}]
