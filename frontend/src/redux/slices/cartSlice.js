@@ -21,9 +21,9 @@ export const fetchCartForCurrentUserThunk = createAsyncThunk(
 
 
 
-export const addItemsToCartThunk = createAsyncThunk('carts/addItems', async ({ items, additionalItems }) => {
-  const response = await addItemsToCart({ items, additionalItems });
-  return response.cart;  // Ambil cart dari response
+export const addItemsToCartThunk = createAsyncThunk('carts/addItems', async (items) => {
+  const response = await addItemsToCart({ items });  // Hanya mengirim items
+  return response;  // Kembalikan seluruh respons
 });
 
 export const fetchAllCartsThunk = createAsyncThunk('carts/fetchAllCarts', async () => {

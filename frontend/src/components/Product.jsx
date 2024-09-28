@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllProducts } from '../redux/slices/productSlice';
 import PropTypes from 'prop-types';
-import { addItemsToCartThunk, fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
+import { fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
+import { addItemsToCart } from '../redux/api/cartApiService'; // Pastikan ini sesuai dengan path yang benar
 import Tag from './Tag';
 
 const Product = ({ formatPrice }) => {
@@ -17,12 +18,20 @@ const Product = ({ formatPrice }) => {
     }
   }, [dispatch, status]);
 
-  const handleAddToCart = (product, quantity) => {
-    dispatch(addItemsToCartThunk([{ productId: product._id, quantity }]))
-      .then(() => {
+
+  const handleAddToCart = async (product, quantity) => {
+    console.log("Adding to cart:", { productId: product._id, quantity }); // Debug log
+    try {
+        await addItemsToCart([{ product: { productId: product._id, quantity } }]); // Format sesuai contoh JSON
         dispatch(fetchCartForCurrentUserThunk());
-      });
-  };
+    } catch (error) {
+        console.error("Failed to add items to cart:", error);
+    }
+};
+
+
+
+
 
   const handleButtonClick = (product, quantity, buttonId, event) => {
     event.stopPropagation(); // Prevent the click from propagating to the row
@@ -93,6 +102,7 @@ const Product = ({ formatPrice }) => {
                       >
                         +1
                       </button>
+                      
                       <button
                         onClick={(e) => handleButtonClick(product, 5, `${product._id}-5`, e)}
                         className={`bg-warna3 shadow-md p-2 rounded-md transition-all duration-300 ${
@@ -121,7 +131,6 @@ const Product = ({ formatPrice }) => {
     </div>
   );
 };
-
 
 Product.propTypes = {
   formatPrice: PropTypes.func.isRequired,

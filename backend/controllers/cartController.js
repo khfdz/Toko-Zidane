@@ -4,10 +4,23 @@ const Product = require('../models/productModel');
 const User = require('../models/userModel');
 
 const addItemsToCart = async (req, res) => {
-  const { items, additionalItems, note, discount, discountText, customer } = req.body;
+  // Ambil data dari body
+  const { 
+    items = [], // Berikan default value sebagai array kosong
+    additionalItems,
+    note,
+    discount,
+    discountText,
+    customer 
+  } = req.body; 
   const userId = req.user.id;
 
   try {
+    // Periksa apakah items adalah array
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ message: 'Items must be an array' });
+    }
+
     let customerData;
 
     // Validasi data pelanggan
@@ -33,6 +46,7 @@ const addItemsToCart = async (req, res) => {
 
     let subTotal = 0;
 
+    // Jika items kosong, kita masih bisa lanjut
     // Menambahkan item ke keranjang
     for (const item of items) {
       const { productId, quantity } = item.product; // Ambil productId dan quantity
@@ -107,6 +121,7 @@ const addItemsToCart = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 
 const getAllCarts = async (req, res) => {

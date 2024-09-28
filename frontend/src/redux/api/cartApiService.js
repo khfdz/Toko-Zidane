@@ -39,10 +39,60 @@ export const fetchCartForCurrentUser = async () => {
 };
 
 // Add items to the cart
-export const addItemsToCart = async (items, additionalItems) => {
-    const response = await axiosInstance.post('/carts/add', { items, additionalItems });
-    return response.data;
+// Fungsi untuk mengirimkan hanya 'items'
+export const addItemsToCart = async (items) => {
+    try {
+        const response = await axiosInstance.post('/carts/add', { items }); // Hanya mengirim items
+        console.log('Items berhasil ditambahkan ke cart:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error menambahkan barang ke cart:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
+
+export const addAdditionalItemsToCart = async (additionalItems) => {
+    const dataToSend = {
+        additionalItems
+    };
+
+    try {
+        const response = await axiosInstance.post('/carts/add', dataToSend);
+        console.log('Additional items berhasil ditambahkan ke cart:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error menambahkan additional items ke cart:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+// Fungsi untuk mengupdate cart dengan note, discount, dan discountText
+export const AddNoteAndDiscount = ({ items = [], note, discount, discountText }) => {
+    return async (dispatch) => {
+      const combinedData = {
+        items, // Tambahkan properti items, default ke array kosong jika tidak ada
+        note: {
+          text: note,
+          discount,
+          discountText,
+        }
+      };
+  
+      try {
+        const response = await axiosInstance.post('/carts/add', combinedData);
+        console.log('Catatan, diskon, dan items berhasil diperbarui:', response.data);
+        
+        // Dispatch success action jika ada, contoh:
+        // dispatch({ type: 'CART_UPDATE_SUCCESS', payload: response.data });
+  
+        return response.data;
+      } catch (error) {
+        console.error('Error memperbarui catatan, diskon, dan items:', error.response ? error.response.data : error.message);
+        throw error;
+      }
+    };
+  };
+
 
 // Fetch all carts
 export const fetchAllCarts = async () => {
