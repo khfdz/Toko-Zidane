@@ -66,32 +66,36 @@ export const addAdditionalItemsToCart = async (additionalItems) => {
     }
 };
 
-// Fungsi untuk mengupdate cart dengan note, discount, dan discountText
-export const AddNoteAndDiscount = ({ items = [], note, discount, discountText }) => {
-    return async (dispatch) => {
-      const combinedData = {
-        items, // Tambahkan properti items, default ke array kosong jika tidak ada
-        note: {
-          text: note,
-          discount,
-          discountText,
-        }
-      };
-  
-      try {
-        const response = await axiosInstance.post('/carts/add', combinedData);
-        console.log('Catatan, diskon, dan items berhasil diperbarui:', response.data);
-        
-        // Dispatch success action jika ada, contoh:
-        // dispatch({ type: 'CART_UPDATE_SUCCESS', payload: response.data });
-  
-        return response.data;
-      } catch (error) {
-        console.error('Error memperbarui catatan, diskon, dan items:', error.response ? error.response.data : error.message);
-        throw error;
-      }
+// Fungsi untuk menambahkan diskon
+export const addDiscount = async ({ discount, discountText }) => {
+    const combinedData = {
+        discount,
+        discountText,
     };
-  };
+
+    try {
+        const response = await axiosInstance.post('/carts/add', combinedData);
+        console.log('Diskon berhasil ditambahkan:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error menambahkan diskon:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+// Fungsi untuk menambahkan catatan
+export const addNote = async (note) => {
+    try {
+        const response = await axiosInstance.post('/carts/add', { note });
+        console.log('Catatan berhasil ditambahkan:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error menambahkan catatan:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+
 
 
 // Fetch all carts

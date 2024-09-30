@@ -10,6 +10,7 @@ import { saveCartThunk, getAllSaveCartsThunk } from '../redux/slices/cartSaveSli
 import { fetchAllUsers } from '../redux/slices/authSlice';
 import PropTypes from 'prop-types';
 import DiscountView from '../components/DiscountView';
+import NoteView from '../components/NoteView';
 
 const SlideUp = ({ isVisible, onToggle }) => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const SlideUp = ({ isVisible, onToggle }) => {
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [customers, setCustomers] = useState([]);
   const [isDiscountVisible, setDiscountVisible] = useState(false);
+  const [isNoteVisible, setNoteVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +37,17 @@ const SlideUp = ({ isVisible, onToggle }) => {
     };
     fetchData();
   }, [dispatch]);
+
+  const handleNoteToggle = () => {
+    setNoteVisible(!isNoteVisible);
+  };
+
+    // Tambahkan handler untuk memperbarui catatan
+
+
+  const isValidNote = (note) => {
+    return note && note.trim() !== '' && note !== '0' && note !== '.' && note !== 'aa' && note !== 'bb';
+  };
 
   const handleClearCart = async () => {
     try {
@@ -99,20 +112,41 @@ const SlideUp = ({ isVisible, onToggle }) => {
   return (
     <div>
       <div
-        className={`z-50 fixed bottom-0 left-0 w-full h-full bg-gray-300 p-4 pr-7 transition-transform duration-500 ease-in-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`z-50 fixed bottom-0 left-0 w-full h-full bg-gray-300 p-4  transition-transform duration-500 ease-in-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-md text-black font-semibold cursor-pointer bg-warna2 p-2 rounded-md" onClick={handleCustomerClick}>
-            Nama Pembeli: {selectedCustomer || cart.customer?.name || ''}
-          </h2>
-          <button className='text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md' onClick={handleDiscountToggle}>
-            %
-          </button>
-          <button className='text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md'>N</button>
-          <button className="text-white font-md bg-warna1 font-bold w-8 h-8 rounded-md" onClick={onToggle}>
-            X
-          </button>
-        </div>
+<div className="flex justify-between items-center mb-4">
+  <h2 
+    className="text-md text-black font-semibold cursor-pointer bg-white drop-shadow-md p-2 rounded-md" 
+    onClick={handleCustomerClick}
+  >
+    {selectedCustomer || cart.customer?.name || ''}
+  </h2>
+  
+  <div className="flex space-x-2"> {/* Mengelompokkan tombol */}
+    <button 
+      className="text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md" 
+      onClick={handleNoteToggle}
+      title="Tambahkan Catatan"
+    >
+      N
+    </button>
+    <button 
+      className="text-white font-md bg-warna3 font-bold w-8 p-1 h-8 rounded-md" 
+      onClick={handleDiscountToggle}
+      title="Terapkan Diskon"
+    >
+      %
+    </button>
+    <button 
+      className="text-white font-md bg-warna1 font-bold w-8 h-8 rounded-md" 
+      onClick={onToggle}
+      title="Tutup"
+    >
+      X
+    </button>
+  </div>
+</div>
+
 
         {combinedItems.length === 0 ? (
           <div className="flex items-center justify-center h-full">
@@ -150,9 +184,9 @@ const SlideUp = ({ isVisible, onToggle }) => {
               </div>
             )}
 
-            <div className="flex space-x-12 text-center mb-3 text-black">
-              <div className="bg-warna2 w-full rounded-md font-semibold p-1">Jenis: {cart.totalProduct || 0} item</div>
-              <div className="bg-warna2 w-full rounded-md font-semibold p-1">Total: {cart.totalQuantity || 0} item</div>
+            <div className="flex space-x-12 text-center mb-3 text-black drop-shadow-md">
+              <div className="bg-white w-full rounded-md font-semibold p-1">Jenis: {cart.totalProduct || 0} item</div>
+              <div className="bg-white w-full rounded-md font-semibold p-1">Total: {cart.totalQuantity || 0} item</div>
             </div>
 
             {(cart.note || cart.discount > 0) && (
@@ -172,13 +206,15 @@ const SlideUp = ({ isVisible, onToggle }) => {
               </div>
             )}
 
-            <div className="bg-warna2 font-semibold p-2 rounded-xl mb-2 text-center">
+            <div className="bg-white drop-shadow-md font-semibold p-2 rounded-xl mb-2 text-center">
               <span>Total: {formatPrice(cart.totalPrice || 0)}</span>
             </div>
 
-            <div className="bg-white p-2 rounded-xl mb-2 text-left">
-              <span>Catatan: {cart.note}</span>
-            </div>
+            {isValidNote(cart.note) && (
+  <div className="bg-white p-2 rounded-xl mb-2 text-left">
+    <span>Catatan: {cart.note}</span>
+  </div>
+)}
 
             <div className="fixed bottom-4 left-4 right-4 flex justify-between items-center font-semibold">
               <button onClick={handleClearCart} className="bg-warna2 text-gray-800 w-[70px] p-2 rounded-md">Hapus</button>
@@ -209,16 +245,22 @@ const SlideUp = ({ isVisible, onToggle }) => {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => setPopupVisible(false)} className="mt-2 bg-gray-500 text-white p-2 rounded">
-                Cancel
-              </button>
+              <button onClick={() => setPopupVisible(false)} className="mt-2 bg-gray-300 p-2 rounded">Close</button>
             </div>
           </div>
         )}
 
         {isDiscountVisible && (
-          <DiscountView items={combinedItems} onClose={() => setDiscountVisible(false)} />
+          <DiscountView onClose={handleDiscountToggle} />
         )}
+
+{isNoteVisible && (
+  <NoteView 
+    onClose={handleNoteToggle} 
+    initialNote={cart.note} // Mengirim catatan yang ada ke NoteView
+  />
+)}
+
       </div>
     </div>
   );

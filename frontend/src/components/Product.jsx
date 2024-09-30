@@ -22,12 +22,15 @@ const Product = ({ formatPrice }) => {
   const handleAddToCart = async (product, quantity) => {
     console.log("Adding to cart:", { productId: product._id, quantity }); // Debug log
     try {
-        await addItemsToCart([{ product: { productId: product._id, quantity } }]); // Format sesuai contoh JSON
-        dispatch(fetchCartForCurrentUserThunk());
+      const response = await addItemsToCart([{ product: { productId: product._id, quantity } }]);
+      console.log('Response dari API:', response); // Log response dari API
+      dispatch(fetchCartForCurrentUserThunk());
     } catch (error) {
-        console.error("Failed to add items to cart:", error);
+      console.error("Failed to add items to cart:", error);
     }
-};
+  };
+  
+
 
 
 

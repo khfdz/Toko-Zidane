@@ -4,9 +4,8 @@ const Product = require('../models/productModel');
 const User = require('../models/userModel');
 
 const addItemsToCart = async (req, res) => {
-  // Ambil data dari body
   const { 
-    items = [], // Berikan default value sebagai array kosong
+    items = [],
     additionalItems,
     note,
     discount,
@@ -16,14 +15,12 @@ const addItemsToCart = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    // Periksa apakah items adalah array
     if (!Array.isArray(items)) {
       return res.status(400).json({ message: 'Items must be an array' });
     }
 
     let customerData;
 
-    // Validasi data pelanggan
     if (customer && customer.id) {
       customerData = await User.findById(customer.id);
       if (!customerData) {
@@ -46,10 +43,8 @@ const addItemsToCart = async (req, res) => {
 
     let subTotal = 0;
 
-    // Jika items kosong, kita masih bisa lanjut
-    // Menambahkan item ke keranjang
     for (const item of items) {
-      const { productId, quantity } = item.product; // Ambil productId dan quantity
+      const { productId, quantity } = item.product;
 
       const product = await Product.findById(productId);
       if (!product) {
@@ -75,17 +70,16 @@ const addItemsToCart = async (req, res) => {
       subTotal += itemTotalPrice;
     }
 
-    // Menambahkan item tambahan
     if (additionalItems && Array.isArray(additionalItems)) {
       for (const additionalItem of additionalItems) {
-        const { price, name, quantity } = additionalItem.product; // Ambil price, name, dan quantity
+        const { price, name, quantity } = additionalItem.product;
 
         if (price == null || name == null || quantity == null) {
           return res.status(400).json({ message: 'All additional item fields are required' });
         }
 
         const additionalTotalPrice = price * quantity;
-        subTotal += additionalTotalPrice; // Update subtotal
+        subTotal += additionalTotalPrice;
 
         cart.additionalItems.push({
           product: {
@@ -100,18 +94,24 @@ const addItemsToCart = async (req, res) => {
 
     // Update total cart
     cart.subTotal = subTotal;
-    cart.totalPrice = subTotal - (discount || 0);
+    cart.totalPrice = subTotal - (discount !== undefined ? discount : 0);
     cart.totalProduct = cart.items.length + (additionalItems ? additionalItems.length : 0);
     cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
 
-    cart.note = note || cart.note;
-    cart.discount = discount || cart.discount;
+    // Cek dan update catatan
+    const invalidNotes = ["", "0", ".", ",", "aa", "bb"];
+    if (invalidNotes.includes(note)) {
+      cart.note = ""; // Kosongkan note jika invalid
+    } else {
+      cart.note = note; // Simpan note jika valid
+    }
+    
+    cart.discount = discount !== undefined ? discount : cart.discount;
     cart.discountText = discountText || cart.discountText;
 
     // Simpan keranjang
     await cart.save();
 
-    // Kirim respon sukses
     res.status(201).json({
       message: 'Items added to cart successfully',
       cart
@@ -121,6 +121,8 @@ const addItemsToCart = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+
 
 
 
@@ -210,13 +212,17 @@ const editCartById = async (req, res) => {
       cart.customer.id = customer._id;
     }
 
-    // If items provided, update items and subtotal
+    // Update items if provided
     if (items) {
-      cart.items = [];
+      cart.items = []; // Clear existing items
       let subTotal = 0;
 
       for (const item of items) {
-        const { productId, quantity } = item;
+        if (!item.product) {
+          return res.status(400).json({ message: 'Product information is missing' });
+        }
+
+        const { productId, quantity } = item.product;
 
         const product = await Product.findById(productId);
         if (!product) {
@@ -236,17 +242,46 @@ const editCartById = async (req, res) => {
         subTotal += itemTotalPrice;
       }
 
-      // Update total quantities
       cart.subTotal = subTotal;
-      cart.totalPrice = subTotal - (discount || 0);
-      cart.totalProduct = cart.items.length;
       cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0);
-      
-      cart.note = note || cart.note;
-      cart.discount = discount || cart.discount;
-      cart.discountText = discountText || cart.discountText;
-      cart.additionalItems = additionalItems || cart.additionalItems;
+      cart.totalProduct = cart.items.length;
     }
+
+    // Update other fields if provided
+    if (note !== undefined) cart.note = note;
+    if (discount !== undefined) {
+      if (discount < 0) {
+        return res.status(400).json({ message: 'Discount cannot be negative' });
+      }
+      cart.discount = discount;
+    }
+    if (discountText !== undefined) cart.discountText = discountText;
+
+    // Update additionalItems if provided
+    if (additionalItems && Array.isArray(additionalItems)) {
+      cart.additionalItems = []; // Clear existing additionalItems
+      for (const additionalItem of additionalItems) {
+        const { price, name, quantity } = additionalItem.product;
+
+        if (price == null || name == null || quantity == null) {
+          return res.status(400).json({ message: 'All additional item fields are required' });
+        }
+
+        const additionalTotalPrice = price * quantity;
+
+        cart.additionalItems.push({
+          product: {
+            price: price,
+            name: name,
+            quantity: quantity,
+            totalPriceProduct: additionalTotalPrice
+          }
+        });
+      }
+    }
+
+    // Update totalPrice based on subTotal and discount
+    cart.totalPrice = cart.subTotal - (cart.discount || 0);
 
     // Save changes
     await cart.save();
@@ -257,9 +292,13 @@ const editCartById = async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating cart:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
+
+
+
+
 
 const clearCart = async (req, res) => {
   const userId = req.user.id;

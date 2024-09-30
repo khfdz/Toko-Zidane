@@ -27,7 +27,7 @@ router.get('/:id', authenticate, getCartById);
 router.delete('/:id', authenticate, deleteCartById);
 
 // Endpoint untuk mengedit cart berdasarkan ID
-router.put('/:id', authenticate, editCartById);
+router.patch('/:id', authenticate, editCartById);
 
 // Endpoint untuk mengosongkan cart
 router.post('/clear', authenticate, clearCart);

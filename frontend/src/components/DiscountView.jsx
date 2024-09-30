@@ -1,34 +1,37 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux'; // Import useDispatch dari Redux
-import { AddNoteAndDiscount } from '../redux/api/cartApiService'; // Import fungsi API
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux'; 
+import { addDiscountThunk, fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
 
-const DiscountView = ({ onClose, items }) => {
-  const dispatch = useDispatch(); // Gunakan dispatch Redux
+const DiscountView = ({ onClose, discount, discountText }) => {
+  const dispatch = useDispatch(); 
   const [isDiscountActive, setIsDiscountActive] = useState(false);
   const [discountValue, setDiscountValue] = useState('');
-  const [discountName, setDiscountName] = useState(''); // State untuk nama diskon
+  const [discountName, setDiscountName] = useState('');
 
-  // Fungsi untuk memformat harga dengan titik sebagai pemisah ribuan
   const formatCurrency = (value) => {
-    const numericValue = value.replace(/\D/g, ''); // Hanya ambil angka dari input
+    const numericValue = value.replace(/\D/g, ''); 
     const formattedValue = Number(numericValue).toLocaleString('id-ID');
     return `Rp.${formattedValue}`;
+  };
+
+  const handleDiscountValueChange = (e) => {
+    const rawValue = e.target.value;
+    setDiscountValue(formatCurrency(rawValue));
   };
 
   const handleApplyDiscount = async () => {
     if (discountValue && discountName) {
       try {
-        // Panggil AddNoteAndDiscount menggunakan dispatch Redux
-        const result = await dispatch(AddNoteAndDiscount({
-          items, // Kirim item yang diterima dari props
-          note: discountName,
-          discount: Number(discountValue.replace(/\D/g, '')), // Ambil nilai numerik diskon
+        await dispatch(addDiscountThunk({
+          discount: Number(discountValue.replace(/\D/g, '')),
           discountText: discountName,
         }));
+
         alert(`Diskon "${discountName}" berhasil diterapkan!`);
-        console.log(result);
-        onClose(); // Tutup modal setelah berhasil
+
+        await dispatch(fetchCartForCurrentUserThunk());
+        onClose(); 
       } catch (error) {
         console.error('Error saat menerapkan diskon:', error);
         alert('Gagal menerapkan diskon. Silakan coba lagi.');
@@ -36,18 +39,30 @@ const DiscountView = ({ onClose, items }) => {
     }
   };
 
-  const handleDiscountValueChange = (e) => {
-    const rawValue = e.target.value;
-    setDiscountValue(formatCurrency(rawValue)); // Format harga langsung di input
-  };
-
-  const toggleDiscount = () => {
+  const toggleDiscount = async () => {
     setIsDiscountActive(!isDiscountActive);
+
     if (!isDiscountActive) {
       setDiscountValue('');
-      setDiscountName(''); // Reset nilai diskon dan nama diskon saat dinonaktifkan
+      setDiscountName('');
+    } else {
+      await dispatch(addDiscountThunk({
+        discount: 0, // Kirimkan nilai 0 jika menonaktifkan diskon
+        discountText: '',
+      }));
+
+      await dispatch(fetchCartForCurrentUserThunk());
+      onClose();
     }
   };
+
+  useEffect(() => {
+    if (discount > 0 && discountText) {
+      setDiscountValue(formatCurrency(discount.toString()));
+      setDiscountName(discountText);
+      setIsDiscountActive(true);
+    }
+  }, [discount, discountText]);
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
@@ -83,10 +98,9 @@ const DiscountView = ({ onClose, items }) => {
               onChange={(e) => setDiscountName(e.target.value)}
               className="border border-gray-300 p-2 rounded w-full mb-4"
             />
-            
             <button
               onClick={handleApplyDiscount}
-              className="bg-warna3 text-white p-2 rounded w-full"
+              className="bg-warna3 text-white p-2 rounded w-full mb-2"
             >
               Terapkan
             </button>
@@ -103,7 +117,8 @@ const DiscountView = ({ onClose, items }) => {
 
 DiscountView.propTypes = {
   onClose: PropTypes.func.isRequired,
-  items: PropTypes.array.isRequired, // Terima items sebagai prop
+  discount: PropTypes.number,
+  discountText: PropTypes.string,
 };
 
 export default DiscountView;
