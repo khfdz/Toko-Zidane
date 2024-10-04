@@ -5,6 +5,7 @@ import { fetchCartForCurrentUserThunk } from '../redux/slices/cartSlice';
 import { setView } from '../redux/slices/viewSlice'; // Import setView
 
 import NavbarTransaction from '../components/NavbarTransaction';
+import Manual from '../components/Manual';
 import Kalkulator from '../components/Kalkulator';
 import Product from '../components/Product';
 import SlideUp from '../components/SlideUp';
@@ -45,20 +46,37 @@ const Transaksi = () => {
 <div className="bg-white h-[134px] fixed top-0 left-0 right-0 z-10">
   <NavbarTransaction />
   <div className="fixed top-16 mt-2 left-4 right-4 w-auto flex bg-warna2 rounded-md h-12 items-center justify-center font-semibold text-white">
-    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800" onClick={() => handleViewChange('manual')}>
+    <button 
+      className={`w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800 rounded-md ${
+        view === 'manual' ? 'bg-warna3 text-white' : 'hover:bg-warna3'
+      }`}
+      onClick={() => handleViewChange('manual')}
+    >
       Manual
     </button>
-    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center rounded-md bg-warna3" onClick={() => handleViewChange('product')}>
+    <button 
+      className={` w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800 rounded-md ${
+        view === 'product' ? 'bg-warna3 text-white' : 'hover:bg-warna3'
+      }`}
+      onClick={() => handleViewChange('product')}
+    >
       Produk
     </button>
-    <button className="w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800" onClick={() => handleViewChange('kalkulator')}>
+    <button 
+      className={`w-[150px] h-8 p-2 mx-2 flex items-center justify-center text-center text-gray-800 rounded-md ${
+        view === 'kalkulator' ? 'bg-warna3 text-white' : 'hover:bg-warna3'
+      }`}
+      onClick={() => handleViewChange('kalkulator')}
+    >
       Kalkulator
     </button>
   </div>
 </div>
 
 
+
       <div className="pt-[200px]">
+        {view === 'manual' && <Manual formatPrice={formatPrice} />}
         {view === 'kalkulator' && <Kalkulator />}
          {view === 'product' && <Product formatPrice={formatPrice} />}
       </div>

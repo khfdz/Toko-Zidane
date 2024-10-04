@@ -95,9 +95,6 @@ export const addNote = async (note) => {
     }
 };
 
-
-
-
 // Fetch all carts
 export const fetchAllCarts = async () => {
     const response = await axiosInstance.get('/carts');
@@ -126,4 +123,16 @@ export const editCartById = async (id, updates) => {
 export const clearCart = async () => {
     const response = await axiosInstance.post('/carts/clear');
     return response.data;
+};
+
+// Fungsi untuk menghapus item dari cart// cartApiService.js
+export const deleteItemFromCart = async (cartId, itemId) => {
+    try {
+        const response = await axiosInstance.delete(`/carts/item/${cartId}/${itemId}`);
+        console.log('Item berhasil dihapus dari cart:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error menghapus item dari cart:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };

@@ -122,10 +122,6 @@ const addItemsToCart = async (req, res) => {
   }
 };
 
-
-
-
-
 const getAllCarts = async (req, res) => {
   try {
     const carts = await Cart.find().populate({
@@ -296,10 +292,6 @@ const editCartById = async (req, res) => {
   }
 };
 
-
-
-
-
 const clearCart = async (req, res) => {
   const userId = req.user.id;
 
@@ -310,13 +302,18 @@ const clearCart = async (req, res) => {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
-    // Clear cart items
+    // Kosongkan items, additionalItems, dan reset lainnya
     cart.items = [];
+    cart.additionalItems = []; // Mengosongkan additionalItems juga
     cart.subTotal = 0;
     cart.totalPrice = 0;
     cart.totalProduct = 0;
     cart.totalQuantity = 0;
+    cart.discount = 0; // Reset diskon
+    cart.discountText = ''; // Reset teks diskon
+    cart.note = ''; // Reset catatan
 
+    // Simpan perubahan pada keranjang
     await cart.save();
 
     res.status(200).json({
@@ -324,9 +321,57 @@ const clearCart = async (req, res) => {
       cart
     });
   } catch (error) {
+    console.error('Error clearing cart:', error);
+    res.status(500).json({ message: 'Failed to clear cart', error: error.message || error });
+  }
+};
+
+const deleteItemFromCart = async (req, res) => {
+  const { cartId, itemId } = req.params;
+
+  try {
+    const cart = await Cart.findById(cartId);
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Temukan indeks item yang ingin dihapus dari items
+    const itemIndexInItems = cart.items.findIndex(item => item._id.toString() === itemId);
+    
+    // Temukan indeks item yang ingin dihapus dari additionalItems
+    const itemIndexInAdditionalItems = cart.additionalItems.findIndex(item => item._id.toString() === itemId);
+
+    if (itemIndexInItems > -1) {
+      cart.items.splice(itemIndexInItems, 1);
+    } else if (itemIndexInAdditionalItems > -1) {
+      cart.additionalItems.splice(itemIndexInAdditionalItems, 1);
+    } else {
+      return res.status(404).json({ message: 'Item not found in cart' });
+    }
+
+    // Update total quantity dan total price
+    cart.totalQuantity = cart.items.reduce((acc, item) => acc + item.product.quantity, 0) + cart.additionalItems.reduce((acc, item) => acc + item.product.quantity, 0);
+    cart.totalProduct = cart.items.length + cart.additionalItems.length;
+
+    // Hitung subtotal dan total harga setelah penghapusan item
+    cart.subTotal = cart.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0) + cart.additionalItems.reduce((acc, item) => acc + (item.product.price * item.product.quantity), 0);
+    cart.totalPrice = cart.subTotal - (cart.discount || 0);
+
+    // Simpan perubahan pada keranjang
+    await cart.save();
+
+    res.status(200).json({
+      message: 'Item deleted from cart successfully',
+      cart
+    });
+  } catch (error) {
+    console.error('Error deleting item from cart:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
+
+
 
 module.exports = {
   addItemsToCart,
@@ -335,5 +380,7 @@ module.exports = {
   getCartByUser,
   deleteCartById,
   editCartById,
-  clearCart
+  clearCart,
+  deleteItemFromCart
+
 };

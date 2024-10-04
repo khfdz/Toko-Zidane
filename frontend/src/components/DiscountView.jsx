@@ -65,7 +65,7 @@ const DiscountView = ({ onClose, discount, discountText }) => {
   }, [discount, discountText]);
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-4 rounded-lg w-[90%] max-w-md">
         <h2 className="text-lg font-semibold mb-4">Diskon</h2>
 
