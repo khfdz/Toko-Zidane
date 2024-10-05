@@ -16,51 +16,54 @@ export const fetchCartForCurrentUserThunk = createAsyncThunk(
   'carts/fetchForCurrentUser',
   async () => {
     const response = await fetchCartForCurrentUser();
-    console.log('Response dari API:', response); // Tambahkan log untuk seluruh response
-    return response;  // Kembalikan respons langsung, karena cart tidak ada dalam objek 'cart'
+    return response; // Kembalikan respons langsung
   }
 );
 
 export const addItemsToCartThunk = createAsyncThunk('carts/addItems', async (items) => {
-  const response = await addItemsToCart({ items });  // Hanya mengirim items
-  return response;  // Kembalikan seluruh respons
+  const response = await addItemsToCart({ items });
+  return response; // Kembalikan seluruh respons
 });
 
 export const fetchAllCartsThunk = createAsyncThunk('carts/fetchAllCarts', async () => {
   const response = await fetchAllCarts();
-  return response;  // Sesuaikan jika response memiliki struktur lain
+  return response; // Kembalikan seluruh respons
 });
 
 export const fetchCartByIdThunk = createAsyncThunk('carts/fetchById', async (id) => {
   const response = await fetchCartById(id);
-  return response.cart;  // Ambil cart dari response
+  return response; // Kembalikan seluruh respons
 });
 
 export const deleteCartByIdThunk = createAsyncThunk('carts/deleteById', async (id) => {
   await deleteCartById(id);
-  return id;  // Kembalikan id untuk menghapus cart di state
+  return id; // Kembalikan id untuk menghapus cart di state
 });
 
-export const editCartByIdThunk = createAsyncThunk('carts/editById', async ({ id, updates }) => {
-  const response = await editCartById(id, updates);
-  return response.cart;  // Ambil cart dari response
+export const editCartByIdThunk = createAsyncThunk('carts/editById', async ({ id, updates }, { rejectWithValue }) => {
+  try {
+      const response = await editCartById(id, updates);
+      return response; // Kembalikan data dari respons
+  } catch (error) {
+      return rejectWithValue(error.response ? error.response.data : 'Error editing cart');
+  }
 });
 
 export const clearCartThunk = createAsyncThunk('carts/clearCart', async () => {
   const response = await clearCart();
-  return response.cart;  // Ambil cart dari response
+  return response; // Kembalikan seluruh respons
 });
 
 // Thunk untuk menambahkan diskon
 export const addDiscountThunk = createAsyncThunk('carts/addDiscount', async ({ discount, discountText }) => {
   const response = await addDiscount({ discount, discountText });
-  return response;  // Kembalikan seluruh respons
+  return response; // Kembalikan seluruh respons
 });
 
 // Thunk untuk menambahkan catatan
 export const addNoteThunk = createAsyncThunk('carts/addNote', async (note) => {
-  const response = await addNote(note); // Kirim catatan ke API
-  return response.data; // Kembalikan data dari respons
+  const response = await addNote(note);
+  return response; // Kembalikan seluruh respons
 });
 
 const cartSlice = createSlice({
@@ -88,11 +91,11 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartForCurrentUserThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload;  // Mengambil seluruh data cart
+        state.currentCart = action.payload; // Mengambil seluruh data cart
       })
       .addCase(fetchCartForCurrentUserThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
       
       // Handle addItemsToCartThunk
@@ -101,11 +104,11 @@ const cartSlice = createSlice({
       })
       .addCase(addItemsToCartThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload || { items: [], additionalItems: [] };
+        state.currentCart = action.payload || state.currentCart; // Pastikan tidak mengubah currentCart jika payload kosong
       })
       .addCase(addItemsToCartThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle fetchAllCartsThunk
@@ -118,7 +121,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchAllCartsThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle fetchCartByIdThunk
@@ -127,11 +130,11 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCartByIdThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.currentCart = action.payload || { items: [], totalPrice: 0 };
+        state.currentCart = action.payload || state.currentCart; // Pastikan tidak mengubah currentCart jika payload kosong
       })
       .addCase(fetchCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle deleteCartByIdThunk
@@ -142,12 +145,12 @@ const cartSlice = createSlice({
         state.status = 'succeeded';
         state.allCarts = state.allCarts.filter(cart => cart._id !== action.payload);
         if (state.currentCart._id === action.payload) {
-          state.currentCart = { items: [], totalPrice: 0 };
+          state.currentCart = { items: [], totalPrice: 0 }; // Reset currentCart jika cart yang dihapus adalah currentCart
         }
       })
       .addCase(deleteCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle editCartByIdThunk
@@ -156,13 +159,17 @@ const cartSlice = createSlice({
       })
       .addCase(editCartByIdThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        if (state.currentCart._id === action.payload._id) {
-          state.currentCart = action.payload || { items: [], totalPrice: 0 };
+        const updatedItem = action.payload; // Mengambil data yang diupdate
+        const itemIndex = state.currentCart.items.findIndex(item => item._id === updatedItem.productId);
+      
+        if (itemIndex >= 0) {
+          state.currentCart.items[itemIndex] = updatedItem; // Update item yang ada
         }
       })
+      
       .addCase(editCartByIdThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle clearCartThunk
@@ -181,7 +188,7 @@ const cartSlice = createSlice({
       })
       .addCase(clearCartThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle addDiscountThunk
@@ -190,13 +197,11 @@ const cartSlice = createSlice({
       })
       .addCase(addDiscountThunk.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        // Update currentCart atau tambahkan logika sesuai kebutuhan
-        // Misalnya: jika ingin menambahkan diskon ke totalPrice
-        state.currentCart.totalPrice -= action.payload.discount; // Atur sesuai kebutuhan
+        state.currentCart.totalPrice -= action.payload.discount || 0; // Pastikan diskon valid
       })
       .addCase(addDiscountThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       })
 
       // Handle addNoteThunk
@@ -205,12 +210,11 @@ const cartSlice = createSlice({
       })
       .addCase(addNoteThunk.fulfilled, (state) => {
         state.status = 'succeeded';
-        // Update currentCart atau tambahkan logika sesuai kebutuhan
-        // Misalnya: menyimpan catatan yang baru ditambahkan
+        // Logika tambahan untuk menambahkan catatan jika diperlukan
       })
       .addCase(addNoteThunk.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message; // action.error is used here
+        state.error = action.error.message;
       });
   }
 });

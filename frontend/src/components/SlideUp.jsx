@@ -47,8 +47,6 @@ const SlideUp = ({ isVisible, onToggle }) => {
 
   const handleNoteToggle = () => setNoteVisible(!isNoteVisible);
 
-  const isValidNote = (note) => note && note.trim() !== '' && note !== '0' && note !== '.' && note !== 'aa' && note !== 'bb';
-
   const handleClearCart = async () => {
     try {
       await dispatch(clearCartThunk());
@@ -140,25 +138,18 @@ const SlideUp = ({ isVisible, onToggle }) => {
           </div>
         </div>
 
-        {/* <ul>
-  {combinedItems.map((item, index) => (
-    <CartItem key={`${item.product._id}-${index}`} item={item} />
-  ))}
-</ul> */}
-
-<ul>
-  {combinedItems.map((item, index) => (
-    <CartItem 
-    key={`${item.product._id}-${index}`} 
-    item={item} 
-    cartId={cart._id} 
-    handleUpdateCart={handleUpdateCart}/>
-  ))}
-</ul>
-
-
-
-        
+        <ul>
+          {combinedItems.map((item, index) => (
+            <CartItem 
+              key={`${item._id}-${index}`} 
+              item={item} 
+              cartId={cart._id} 
+              handleUpdateCart={handleUpdateCart}
+              totalQuantity={cart.totalQuantity} // Mengirim totalQuantity
+              discount={cart.discount} // Mengirim discount
+            />
+          ))}
+        </ul>
 
         <CartSummary
           cart={cart}
@@ -179,7 +170,11 @@ const SlideUp = ({ isVisible, onToggle }) => {
       )}
 
       {isDiscountVisible && (
-        <DiscountView onClose={handleDiscountToggle} />
+        <DiscountView 
+          discount={cart.discount}
+          discountText={cart.discountText}
+          onClose={handleDiscountToggle} 
+        />
       )}
 
       {isNoteVisible && (

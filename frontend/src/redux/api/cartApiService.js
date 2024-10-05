@@ -114,10 +114,55 @@ export const deleteCartById = async (id) => {
 };
 
 // Edit a specific cart by ID
-export const editCartById = async (id, updates) => {
-    const response = await axiosInstance.put(`/carts/${id}`, updates); // Kirim updates langsung
-    return response.data;
+// Edit a specific cart by ID
+export const editCartById = async (id, type, updates) => {
+    console.log(`Updating ${type} in cart:`, id);
+    console.log(`Updates for ${type}:`, updates);
+
+    try {
+        const response = await axiosInstance.patch(`/carts/${id}`, {
+            type, // Menambahkan informasi jenis
+            updates // Menambahkan data pembaruan
+        });
+        console.log(`${type.charAt(0).toUpperCase() + type.slice(1)} in cart updated successfully:`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating ${type} in cart:`, error.response ? error.response.data : error.message);
+        throw error; // Pastikan melempar error agar dapat ditangani di tempat lain
+    }
 };
+
+// Untuk mengedit item reguler
+
+// Fungsi untuk mengedit item dalam cart berdasarkan ID cart dan ID item
+export const editCartItemById = async (cartId, itemId, updatedItem) => {
+    try {
+        // Pastikan updatedItem memiliki struktur yang benar sebelum dikirim
+        console.log(`Mengedit item dengan ID ${itemId} di cart ${cartId}:`, updatedItem);
+
+        // Mengirim permintaan patch dengan data yang diperbarui
+        const response = await axiosInstance.patch(`/carts/item/${cartId}/${itemId}`, updatedItem);
+
+        // Menampilkan hasil respons jika berhasil
+        console.log('Item berhasil diperbarui:', response.data);
+        return response.data;
+    } catch (error) {
+        // Menangkap dan menampilkan error dengan lebih detail
+        console.error('Error memperbarui item dalam cart:', error.response ? error.response.data : error.message);
+        
+        // Tambahkan pengecekan jika ada respons dari server
+        if (error.response) {
+            console.log('Status:', error.response.status); // Menampilkan status error
+            console.log('Data:', error.response.data);     // Menampilkan data error dari server
+        }
+        
+        throw error; // Melempar error untuk ditangani di tempat lain
+    }
+};
+
+
+
+
 
 // Clear Cart 
 export const clearCart = async () => {

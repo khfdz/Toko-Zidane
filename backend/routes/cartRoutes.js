@@ -8,7 +8,8 @@ const {
   deleteCartById,
   editCartById,
   clearCart,
-  deleteItemFromCart
+  deleteItemFromCart,
+  editCartItemById
 } = require('../controllers/cartController');
 const authenticate = require('../middlewares/authenticate');
 
@@ -35,5 +36,10 @@ router.post('/clear', authenticate, clearCart);
 
 // Endpoint untuk menghapus item dari cart
 router.delete('/item/:cartId/:itemId', authenticate, deleteItemFromCart);
+
+// Endpoint untuk mengedit item dalam cart berdasarkan ID cart dan ID item
+router.patch('/item/:cartId/:itemId', authenticate, editCartItemById);
+
+
 
 module.exports = router;

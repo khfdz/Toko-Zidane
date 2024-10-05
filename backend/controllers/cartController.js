@@ -218,7 +218,7 @@ const editCartById = async (req, res) => {
           return res.status(400).json({ message: 'Product information is missing' });
         }
 
-        const { productId, quantity } = item.product;
+        const { productId, quantity, name } = item.product; // Ambil nama produk dari request
 
         const product = await Product.findById(productId);
         if (!product) {
@@ -227,10 +227,11 @@ const editCartById = async (req, res) => {
 
         const itemTotalPrice = product.wholesale_price * quantity;
 
+        // Update nama produk jika disediakan
         cart.items.push({
           product: {
             price: product.wholesale_price,
-            name: product.name,
+            name: name || product.name, // Gunakan nama dari request jika ada, jika tidak gunakan nama yang ada di database
             quantity: quantity,
             totalPriceProduct: itemTotalPrice
           }
@@ -291,6 +292,71 @@ const editCartById = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message || error });
   }
 };
+
+const editCartItemById = async (req, res) => {
+  const { cartId, itemId } = req.params;
+  const { productId, name, quantity, price } = req.body;
+
+  try {
+    const cart = await Cart.findById(cartId);
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Temukan item dalam cart berdasarkan ID item
+    let item = cart.items.id(itemId) || cart.additionalItems.id(itemId);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found in cart' });
+    }
+
+    // Update item
+    if (productId) {
+      const product = await Product.findById(productId);
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+      item.product.name = name || product.name;
+      item.product.price = price || product.wholesale_price;
+    } else {
+      if (name) item.product.name = name;
+      if (price !== undefined) {
+        if (price < 0) {
+          return res.status(400).json({ message: 'Price cannot be negative.' });
+        }
+        item.product.price = price;
+      }
+    }
+
+    if (quantity !== undefined) {
+      if (quantity < 1) {
+        return res.status(400).json({ message: 'Quantity must be at least 1.' });
+      }
+      item.product.quantity = quantity;
+    }
+
+    item.product.totalPriceProduct = item.product.price * item.product.quantity;
+
+    // Update total cart
+    cart.subTotal = cart.items.reduce((acc, item) => acc + (item.product.totalPriceProduct || 0), 0) +
+                    cart.additionalItems.reduce((acc, item) => acc + (item.product.totalPriceProduct || 0), 0);
+
+    cart.discount = cart.discount || 0;
+    cart.totalPrice = cart.subTotal - cart.discount;
+
+    // Hitung totalQuantity
+    cart.totalQuantity = cart.items.reduce((acc, item) => acc + (item.product.quantity || 0), 0) + 
+                         cart.additionalItems.reduce((acc, item) => acc + (item.product.quantity || 0), 0);
+
+    await cart.save();
+
+    return res.status(200).json({ message: 'Item updated successfully', cart });
+  } catch (error) {
+    console.error('Error updating item in cart:', error);
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
 
 const clearCart = async (req, res) => {
   const userId = req.user.id;
@@ -381,6 +447,6 @@ module.exports = {
   deleteCartById,
   editCartById,
   clearCart,
-  deleteItemFromCart
-
+  deleteItemFromCart,
+  editCartItemById
 };
