@@ -138,19 +138,23 @@ const SlideUp = ({ isVisible, onToggle }) => {
           </div>
         </div>
 
-        <ul>
-          {combinedItems.map((item, index) => (
-            <CartItem 
-              key={`${item._id}-${index}`} 
-              item={item} 
-              cartId={cart._id} 
-              handleUpdateCart={handleUpdateCart}
-              totalQuantity={cart.totalQuantity} // Mengirim totalQuantity
-              discount={cart.discount} // Mengirim discount
-            />
-          ))}
-        </ul>
+        {/* Bagian yang bisa di-scroll */}
+        <div className="overflow-y-auto max-h-[525px] mb-4">
+          <ul>
+            {combinedItems.map((item, index) => (
+              <CartItem 
+                key={`${item._id}-${index}`} 
+                item={item} 
+                cartId={cart._id} 
+                handleUpdateCart={handleUpdateCart}
+                totalQuantity={cart.totalQuantity} // Mengirim totalQuantity
+                discount={cart.discount} // Mengirim discount
+              />
+            ))}
+          </ul>
+        </div>
 
+        {/* Summary tetap statis di bawah */}
         <CartSummary
           cart={cart}
           handleClearCart={handleClearCart}

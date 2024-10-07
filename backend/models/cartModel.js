@@ -64,6 +64,12 @@ const cartSchema = new mongoose.Schema({
           quantity: {
             type: Number,
             required: true
+          },
+          totalPriceProduct: {
+            type: Number,
+            default: function() {
+              return this.price * this.quantity; // Menghitung totalPriceProduct
+            }
           }
         }, { _id: false }),
         required: true
@@ -111,7 +117,7 @@ const cartSchema = new mongoose.Schema({
 // Pre-save hook to calculate subtotal and total price
 cartSchema.pre('save', function(next) {
   const itemTotal = this.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
-  const additionalTotal = this.additionalItems.reduce((acc, item) => acc + item.product.price * item.product.quantity, 0);
+  const additionalTotal = this.additionalItems.reduce((acc, item) => acc + (item.product.price * item.product.quantity), 0);
   
   this.subTotal = itemTotal + additionalTotal;
   this.totalPrice = this.subTotal - this.discount;

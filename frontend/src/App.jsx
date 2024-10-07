@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Payment from './pages/Payment';
 import TemporaryInvoice from './pages/TemporaryInvoice';
 import TemporaryInvoiceAndDebt from './pages/TemporaryInvoiceAndDebt';
+import CartSave from './pages/CartSave'; // Import page CartSave
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/payment" element={<Payment />} />
             <Route path="/temporary-invoice" element={<TemporaryInvoice />} />
             <Route path="/temporary-invoice-and-debt" element={<TemporaryInvoiceAndDebt />} />
+            <Route path="/cartsave" element={<CartSave />} /> {/* Route baru untuk CartSave */}
           </Routes>
         </div>
       </div>

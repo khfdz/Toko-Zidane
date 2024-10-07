@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import CartSaveView from './CartSaveView'; // Import komponen CartSaveView
 import IconPesanan from '../../public/icons/pesanan.png';
 import IconKeranjang from '../../public/icons/keranjang.png';
 import IconSearch from '../../public/icons/search.png'; // Import ikon pencarian
@@ -11,6 +13,7 @@ import { setView } from '../redux/slices/viewSlice'; // Import setView
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(''); // State untuk input pencarian
+  const [isCartViewOpen, setIsCartViewOpen] = useState(false); // State untuk membuka CartSaveView
 
   const dispatch = useDispatch(); // Inisialisasi dispatch
   const saveCarts = useSelector((state) => state.cartSave.saveCarts || []);
@@ -39,9 +42,19 @@ const Navbar = () => {
     dispatch(setView('product')); // Ubah view menjadi 'product'
   };
 
+  // Fungsi untuk membuka CartSaveView
+  const openCartSaveView = () => {
+    setIsCartViewOpen(true); // Buka CartSaveView
+  };
+
+  // Fungsi untuk menutup CartSaveView
+  const closeCartSaveView = () => {
+    setIsCartViewOpen(false); // Tutup CartSaveView
+  };
+
   return (
     <>
-      <nav className="bg-blue1 p-4 fixed top-0 left-0 right-0 mr-2">
+      <nav className="bg-blue1 p-4 fixed top-0 left-0 right-0 mr-2 z-100">
         <div className="container mx-auto flex justify-between items-center">
           <div className="md:hidden ">
             <button onClick={toggleSidebar} className="focus:outline-none">
@@ -56,7 +69,7 @@ const Navbar = () => {
 
           <input
             placeholder='Cari Produk'
-            className='text-md rounded-md w-[240px] h-8 ml-4 mr-4 text-center bg-warna2 px-10 placeholder-gray-400 text-gray-800   flex items-center focus:outline-none focus:outline focus:outline-warna1 focus:outline-3'
+            className='text-md rounded-md w-[240px] h-8 ml-4 mr-4 text-center bg-warna2 px-10 placeholder-gray-400 text-gray-800 flex items-center focus:outline-none focus:outline focus:outline-warna1 focus:outline-3'
             value={searchQuery} // Menghubungkan dengan state pencarian
             onChange={handleSearchChange} // Handle perubahan input
           />
@@ -71,14 +84,16 @@ const Navbar = () => {
 
           {/* Ikon pesanan dan keranjang */}
           <div className="flex items-center space-x-4">
-            <div className="relative inline-block">
-              <img src={IconPesanan} alt="Pesanan" className="w-24 object-cover" />
-              <span className="absolute top-0 right-0 left-6 transform -translate-x-1/2 -translate-y-1/2 bg-warna3 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
-                {saveCarts.saveCartCount || 0} {/* Menggunakan saveCarts.length untuk menghitung jumlah cart yang tersimpan */}
-              </span>
-            </div>
-
-            <div className='relative inline-block'>
+          <div className="relative inline-block">
+        <Link to="/cartsave"> {/* Navigasi ke halaman CartSave */}
+          <img src={IconPesanan} alt="Pesanan" className="w-24 object-cover" />
+          <span className="absolute top-0 right-0 left-6 transform -translate-x-1/2 -translate-y-1/2 bg-warna3 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+            {/* Counter Cart */}
+            {saveCarts.saveCartCount || 0}
+          </span>
+        </Link>
+      </div>
+            <div className='relative inline-block' > {/* Set event handler di sini */}
               <img src={IconKeranjang} alt="Keranjang" className="w-22 -mt-1 object-cover" />
               <span className="absolute top-0 right-0 left-9 transform -translate-x-1/2 -translate-y-1/2 bg-warna3 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                 {saveCarts.saveCartCount || 0}
@@ -98,6 +113,9 @@ const Navbar = () => {
 
       {/* Render Sidebar jika terbuka */}
       {isSidebarOpen && <Sidebar toggleSidebar={toggleSidebar} />}
+
+      {/* Render CartSaveView jika terbuka */}
+      {isCartViewOpen && <CartSaveView onClose={closeCartSaveView} />}
     </>
   );
 };

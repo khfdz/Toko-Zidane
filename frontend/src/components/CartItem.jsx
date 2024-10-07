@@ -39,11 +39,6 @@ const CartItem = ({ item, cartId, handleUpdateCart, discount }) => {
     }
   };
 
-  const calculateFinalPrice = () => {
-    const itemTotal = item.product.price * item.product.quantity;
-    return discount ? itemTotal - (itemTotal * (discount / 100)) : itemTotal;
-  };
-
   const handleSaveEdit = async (updatedData) => {
     try {
       await editCartItemById(cartId, item._id, updatedData);
@@ -56,23 +51,24 @@ const CartItem = ({ item, cartId, handleUpdateCart, discount }) => {
   };
 
   return (
-    <div {...handlers} className="relative overflow-hidden bg-white p-2 rounded-xl mb-2 flex justify-between">
+    <div {...handlers} className="relative overflow-hidden bg-white p-2 rounded-xl mb-2 flex flex-col">
+      {/* Swipe actions */}
       <div className={`absolute right-0 top-0 h-full flex items-center space-x-2 bg-gray-200 p-2 transition-transform duration-300 ${showActions ? 'translate-x-0' : 'translate-x-full'}`}>
         <button className="bg-green-500 text-white px-3 py-1 rounded">+</button>
         <button className="bg-yellow-500 text-white px-3 py-1 rounded">-</button>
         <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={handleDelete}>Delete</button>
       </div>
 
-      <div className="flex justify-between items-center w-full" onClick={handleEdit}>
-        <div className="cursor-pointer w-full">
+      {/* Scrollable content */}
+      <div className="flex justify-between w-full">
+        <div className="cursor-pointer w-full max-h-24 overflow-y-auto p-2" onClick={handleEdit} style={{ maxHeight: '100px' }}>
           <span>{updatedItem?.product?.name || 'Nama Produk Tidak Ada'}</span>
           <br />
           <span>{updatedItem?.product?.quantity || 0} x {formatPrice(updatedItem?.product?.price)}</span>
-          <br />
-          <span className="text-sm text-gray-600">ID Produk: {item._id || 'ID Produk Tidak Ada'}</span>
+
         </div>
-        <div className="text-right">
-          <span className="font-bold">{formatPrice(calculateFinalPrice())}</span>
+        <div className="text-right flex-shrink-0 mt-4">
+          <span className="font-bold">{formatPrice(updatedItem?.product?.totalPriceProduct || 0)}</span>
         </div>
       </div>
 
@@ -82,7 +78,7 @@ const CartItem = ({ item, cartId, handleUpdateCart, discount }) => {
           cartId={cartId}
           onClose={() => setIsEditing(false)}
           onSave={handleSaveEdit}  // Pass the save handler to CartEdit
-          isAdditional={false}
+          isAdditional={false}  // Adjust this based on whether it's additional item or not
         />
       )}
     </div>

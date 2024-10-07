@@ -48,6 +48,38 @@ const cartSaveSchema = new mongoose.Schema({
       }
     }
   ],
+  // Tambahkan additionalItems disini
+  additionalItems: [
+    {
+      product: {
+        type: new mongoose.Schema({
+          price: {
+            type: Number,
+            required: true
+          },
+          name: {
+            type: String,
+            required: true
+          },
+          quantity: {
+            type: Number,
+            required: true
+          },
+          totalPriceProduct: {
+            type: Number,
+            default: function() {
+              return this.price * this.quantity;
+            }
+          }
+        }, { _id: false }),
+        required: true
+      },
+      _id: {
+        type: String,
+        default: uuidv4
+      }
+    }
+  ],
   totalProduct: {
     type: Number,
     required: true,

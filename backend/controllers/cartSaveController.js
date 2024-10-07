@@ -24,28 +24,32 @@ const saveCart = async (req, res) => {
 
     // Hitung subTotal dan totalPrice secara manual
     const subTotal = cart.items.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
-    const totalPrice = subTotal + (cart.additionalPrice || 0) - (cart.discount || 0);
+    const additionalTotal = cart.additionalItems.reduce((acc, item) => acc + item.product.totalPriceProduct, 0);
+    const totalPrice = subTotal + additionalTotal - (cart.discount || 0);
 
     const cartSave = new CartSave({
       user: userId,
       items: cart.items,
+      additionalItems: cart.additionalItems, // Tambahkan additionalItems ke CartSave
       totalProduct: cart.totalProduct,
       totalQuantity: cart.totalQuantity,
       note: cart.note,
       discount: cart.discount,
       additionalText: cart.additionalText,
       additionalPrice: cart.additionalPrice,
-      subTotal: subTotal,
+      subTotal: subTotal + additionalTotal,
       totalPrice: totalPrice,
       customer: cart.customer // Simpan customer ID dan name
     });
 
     await cartSave.save();
 
+    // Reset cart setelah disimpan
     await Cart.findOneAndUpdate(
       { user: userId },
       {
         items: [],
+        additionalItems: [], // Reset additionalItems juga
         totalProduct: 0,
         totalQuantity: 0,
         note: '',
@@ -64,6 +68,7 @@ const saveCart = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 // Load Cart
 const loadCart = async (req, res) => {
@@ -87,6 +92,7 @@ const loadCart = async (req, res) => {
 
     // Update cart aktif dengan data dari saveCart
     cart.items = cartSave.items;
+    cart.additionalItems = cartSave.additionalItems; // Muat additionalItems
     cart.totalProduct = cartSave.totalProduct;
     cart.totalQuantity = cartSave.totalQuantity;
     cart.note = cartSave.note;
@@ -110,6 +116,7 @@ const loadCart = async (req, res) => {
   }
 };
 
+
 // Delete SaveCart
 const deleteSaveCart = async (req, res) => {
   const { id } = req.params; // ID dari saveCart yang ingin dihapus
@@ -125,7 +132,7 @@ const deleteSaveCart = async (req, res) => {
     res.status(200).json({ message: 'Saved cart deleted successfully' });
   } catch (error) {
     console.error('Error deleting saved cart:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -146,7 +153,7 @@ const getAllSaveCarts = async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting all saved carts:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -165,7 +172,7 @@ const getSaveCartById = async (req, res) => {
     res.status(200).json({ cartSave });
   } catch (error) {
     console.error('Error getting saved cart by ID:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
